@@ -1,15 +1,14 @@
-Package: SSE_BFF
+Package: SSEBFF
 Version: 0.01
 Date: 2025-05-27
 Title: Sample Size Estimation for Clinical Trials in Multiple Paradigms
 Author: Rachel Zhuang <zhuan225@umn.edu>, R. Oliver VandenBerg <vandenbergroliver@gmail.com>
-Maintainer: R. Oliver VandenBerg <vandenbergroliver@gmail.com
-Depends: R (>=3.5.0)
+Maintainer: R. Oliver VandenBerg <vandenbergroliver@gmail.com>
+Depends: R (>= 3.5.0)
 Description: Includes Sample size estimations for one and term arm trials in standard, non-inferiority, and longitudinal cases, under both Bayesian and Frequentist paradigms. Some fiducial sample size estimation may be included later.
 License: CC0
-Suggests: 
+Suggests:
 	rmarkdown,
 	knitr,
-	testthat (>=3.0,0)
 VignetteBuilder: knitr
 Config/testthat/edition: 3
