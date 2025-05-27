@@ -1,0 +1,3 @@
+useDynLib(SSE_BFF)
+
+importFrom("stats", "integrate", "qnorm")
