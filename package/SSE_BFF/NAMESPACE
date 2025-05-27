@@ -1,3 +1,4 @@
 useDynLib(SSE_BFF)
 
 importFrom("stats", "integrate", "qnorm")
+Export("One_Arm_Freq_cont")
