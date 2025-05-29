@@ -1,4 +1,2 @@
-useDynLib(SSEBFF)
-
 importFrom("stats", "integrate", "qnorm")
 export("One_Arm_Freq_cont")
