@@ -1,2 +1,7 @@
-importFrom("stats", "integrate", "qnorm")
+useDynLib(SSEBFF)
+
+importFrom("stats", "integrate", "qnorm", "rbinom", "sqrt", "mean", "ceiling")
+export("One_Arm_Freq_theory")
 export("One_Arm_Freq_cont")
+export("Two_Arm_Freq_theory")
+export("Two_Arm_Freq_cont")
