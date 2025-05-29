@@ -1,6 +1,6 @@
 useDynLib(SSEBFF)
 
-importFrom("stats", "integrate", "qnorm", "rbinom", "sqrt", "mean", "ceiling")
+importFrom("stats", "integrate", "qnorm", "rbinom", "sqrt", "mean", "ceiling", "pnorm")
 export("One_Arm_Freq_theory")
 export("One_Arm_Freq_cont")
 export("Two_Arm_Freq_theory")
