@@ -87,3 +87,29 @@ One_Arm_BESS = function(theta0, c, e, outcome, a, b, q = 0.5, sig = 1, n_min = 5
     return(list(n = n_result, n_seq = n_seq, vec = s_vec))
   }
 }
+
+One_Arm_Normal_Post_Prob = function(sample_size, threshold, effect_size, prior_mean, prior_sd, sigma, quant = 0.5) {
+  variance = 1 / ((1 / (prior_sd^2)) + (sample_size / (sigma^2)))
+  post_mean = variance * (prior_mean / (prior_sd^2) + (sample_size * effect_size) / (sigma^2))
+  z_val = (threshold - post_mean) / sqrt(variance)
+  prob = 1 - pnorm(z_val)
+  if (quant == 0.5) {
+    return(prob)
+  } else {
+    adjust = (2 * quant - 1) * prob
+    res = (quant * prob) / (1 - quant + adjust)
+    return(res)
+  }
+}
+
+One_Arm_Normal_Sample_Size = function(threshold, crit, effect_size, prior_mean, prior_sd, min_n = 5, max_n = 100, quant = 0.5, sigma = 1) {
+  n_vals = seq(min_n, max_n)
+  prob_vals = rep(NA, length(n_vals))
+  for (n in n_vals) {
+    prob_vals[n - min_n + 1] = One_Arm_Normal_Post_Prob(n, threshold, effect_size, prior_mean, prior_sd, sigma, quant)
+  }
+  if (prob_vals[1] >= crit) return("Decrease min_n")
+  if (prob_vals[length(prob_vals)] < crit) return("Increase max_n")
+  final_n = n_vals[which(prob_vals >= crit)[1]]
+  return(list(n = final_n, prob = prob_vals[which(prob_vals >= crit)[1]], prob_h1_vec = prob_vals))
+}
