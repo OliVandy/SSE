@@ -283,3 +283,64 @@ Two_Arm_Bayes_Sample_Size = function(null_margin, threshold, expected_effect, mi
   
   return(list(n = final_n, yd = target_diff, n_seq = seq(min_n, max_n), vec = prob_vec, yd_vec = diff_vec, tr_vals = tr_vec, ct_vals = ct_vec))
 }
+
+Two_Arm_Gamma_Post_Prob = function(count_treat, count_ctrl, sample_size, threshold, a_t, b_t, a_c, b_c, quant = 0.5, simulations = 10000) {
+  shape_t = a_t + count_treat
+  rate_t = b_t + sample_size
+  post_t = rgamma(simulations, shape_t, rate = rate_t)
+  
+  shape_c = a_c + count_ctrl
+  rate_c = b_c + sample_size
+  post_c = rgamma(simulations, shape_c, rate = rate_c)
+  
+  diff = post_t - post_c
+  post_prob = sum(diff > threshold) / simulations
+  
+  if (quant == 0.5) {
+    return(post_prob)
+  } else {
+    adjust = (2 * quant - 1) * post_prob
+    res = (quant * post_prob) / (1 - quant + adjust)
+    return(res)
+  }
+}
+
+Two_Arm_Gamma_Min_Effect = function(effect_size, sample_size, threshold, a_t, b_t, a_c, b_c, quant = 0.5, s_reps = 10000, reps = 10000) {
+  lambda_ctrl = rgamma(s_reps, a_c, rate = b_c)
+  probs = rep(NA, s_reps)
+  yt_vals = rep(NA, s_reps)
+  yc_vals = rep(NA, s_reps)
+  
+  for (i in 1:s_reps) {
+    ctrl_count = sum(rpois(sample_size, lambda_ctrl[i]))
+    treat_count = ctrl_count + floor(sample_size * effect_size)
+    probs[i] = Two_Arm_Gamma_Post_Prob(treat_count, ctrl_count, sample_size, threshold, a_t, b_t, a_c, b_c, quant, reps)
+    yt_vals[i] = treat_count
+    yc_vals[i] = ctrl_count
+  }
+  
+  min_index = which.min(probs)
+  return(list(y1 = yt_vals[min_index], y2 = yc_vals[min_index], min_xi = probs[min_index]))
+}
+
+Two_Arm_Gamma_Sample_Size = function(threshold, crit, effect_size, a_t, b_t, a_c, b_c, min_n = 5, max_n = 100, quant = 0.5, s_reps = 1000, reps = 10000) {
+  xi_vals = numeric(max_n - min_n + 1)
+  diff_vals = numeric(max_n - min_n + 1)
+  y1_vals = numeric(max_n - min_n + 1)
+  y2_vals = numeric(max_n - min_n + 1)
+  
+  for (n in seq(min_n, max_n)) {
+    min_result = Two_Arm_Gamma_Min_Effect(effect_size, n, threshold, a_t, b_t, a_c, b_c, quant, s_reps, reps)
+    idx = n - min_n + 1
+    xi_vals[idx] = min_result$min_xi
+    diff_vals[idx] = min_result$y1 - min_result$y2
+    y1_vals[idx] = min_result$y1
+    y2_vals[idx] = min_result$y2
+    
+    if (min_result$min_xi >= crit) {
+      return(list(n = n, yd = diff_vals[idx], prob_h1_vec = xi_vals[1:idx], 
+                  yd_vec = diff_vals[1:idx], y1_vec = y1_vals[1:idx], y2_vec = y2_vals[1:idx]))
+    }
+  }
+  return("Criteria not met - increase max_n")
+}
