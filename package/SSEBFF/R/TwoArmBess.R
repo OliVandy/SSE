@@ -199,3 +199,87 @@ Two_Arm_Standard_SSE_Design <- function(n_f, theta_H, theta_L, theta_s, alpha, i
   
   return(c(mean(y_H), mean(y_L), freq_dec, n_tot))
 }
+
+# Posterior probability function for H1 (two-arm)
+Two_Arm_Post_Prob_H1 = function(obs_t, obs_c, sample_size, margin, alpha1 = 0.5, beta1 = 0.5, alpha2 = 0.5, beta2 = 0.5, prior_weight = 0.5, iterations = 10000) {
+  
+  p_t_a = alpha1 + obs_t
+  p_t_b = beta1 + sample_size - obs_t
+  post_t = rbeta(iterations, p_t_a, p_t_b)
+  
+  p_c_a = alpha2 + obs_c
+  p_c_b = beta2 + sample_size - obs_c
+  post_c = rbeta(iterations, p_c_a, p_c_b)
+  
+  diff_post = post_t - post_c
+  p_post = sum(diff_post > margin) / iterations
+  
+  if (prior_weight == 0.5) {
+    return(p_post)
+  } else {
+    adj = (2 * prior_weight - 1) * p_post
+    result = (prior_weight * p_post) / (1 - prior_weight + adj)
+    return(result)
+  }
+}
+
+# Find minimum adjusted posterior (two-arm)
+Two_Arm_Min_Adj_Prob = function(diff, sample_size, margin, alpha1 = 0.5, beta1 = 0.5, alpha2 = 0.5, beta2 = 0.5, prior_weight = 0.5, iterations = 10000) {
+  outcome_list = list(treat = c(), ctrl = c(), adj_prob = c())
+  
+  for (tr in 0:sample_size) {
+    for (ct in 0:sample_size) {
+      if ((tr - ct) == diff) {
+        outcome_list$treat = c(outcome_list$treat, tr)
+        outcome_list$ctrl = c(outcome_list$ctrl, ct)
+        outcome_list$adj_prob = c(outcome_list$adj_prob, Two_Arm_Post_Prob_H1(tr, ct, sample_size, margin, alpha1, beta1, alpha2, beta2, prior_weight, iterations))
+      }
+    }
+  }
+  min_index = which(outcome_list$adj_prob == min(outcome_list$adj_prob))[1]
+  return(list(treat = outcome_list$treat[min_index], ctrl = outcome_list$ctrl[min_index], min_prob = outcome_list$adj_prob[min_index]))
+}
+
+# BESS design for binary outcome (two-arm)
+Two_Arm_Bayes_Sample_Size = function(null_margin, threshold, expected_effect, min_n, max_n, alpha1 = 0.05, beta1 = 0.05, alpha2 = 0.05, beta2 = 0.05, prior_weight = 0.5, iterations = 10000) {
+  
+  prob_vec = c()
+  diff_vec = c()
+  tr_vec = c()
+  ct_vec = c()
+  
+  final_n = NA
+  target_diff = NA
+  
+  max_diff = floor(expected_effect * max_n)
+  min_at_max = Two_Arm_Min_Adj_Prob(max_diff, max_n, null_margin, alpha1, beta1, alpha2, beta2, prior_weight, iterations)
+  
+  if (min_at_max$min_prob < threshold) {
+    final_n = max_n
+    target_diff = max_diff
+    return(list(n = final_n, yd = target_diff, n_seq = seq(min_n, max_n), vec = prob_vec, yd_vec = diff_vec, tr_vals = tr_vec, ct_vals = ct_vec))
+  }
+  
+  for (current_n in seq(min_n, max_n)) {
+    diff_value = floor(expected_effect * current_n)
+    min_out = Two_Arm_Min_Adj_Prob(diff_value, current_n, null_margin, alpha1, beta1, alpha2, beta2, prior_weight, iterations)
+    
+    if (min_out$min_prob >= threshold && is.na(final_n)) {
+      final_n = current_n
+      target_diff = diff_value
+      break
+    }
+    
+    prob_vec = c(prob_vec, min_out$min_prob)
+    diff_vec = c(diff_vec, diff_value)
+    tr_vec = c(tr_vec, min_out$treat)
+    ct_vec = c(ct_vec, min_out$ctrl)
+  }
+  
+  if (is.na(final_n)) {
+    final_n = max_n
+    target_diff = floor(expected_effect * final_n)
+  }
+  
+  return(list(n = final_n, yd = target_diff, n_seq = seq(min_n, max_n), vec = prob_vec, yd_vec = diff_vec, tr_vals = tr_vec, ct_vals = ct_vec))
+}
