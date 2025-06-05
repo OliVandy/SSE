@@ -1,6 +1,10 @@
 useDynLib(SSEBFF)
 
+<<<<<<< HEAD
 importFrom("stats", "integrate", "qnorm", "rbinom",  "pnorm", "rbeta", "rgamma", "rpois", "qbeta")
+=======
+importFrom("stats", "integrate", "qnorm", "rbinom", "pnorm", "rbeta", "rgamma", "rpois", "qbeta")
+>>>>>>> 87260ac0b2d944c0651a5280f2b930037206bb75
 export("One_Arm_Freq_theory")
 export("One_Arm_Freq_cont")
 export("Two_Arm_Freq_theory")
