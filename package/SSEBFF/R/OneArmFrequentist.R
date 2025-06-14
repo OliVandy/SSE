@@ -1,4 +1,4 @@
-One_Arm_Freq_theory <- function(alpha, beta, theta, theta_star) {
+One_Arm_Freq_theory = function(alpha, beta, theta, theta_star) {
   z_alpha = qnorm(1 - alpha)        # Z-score for significance level
   z_beta = qnorm(1 - beta)         # Z-score for desired power
   numerator = (z_alpha + z_beta)^2 * theta * (1 - theta)
