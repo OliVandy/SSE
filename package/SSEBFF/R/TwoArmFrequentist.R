@@ -7,35 +7,48 @@ Two_Arm_Freq_theory = function(alpha, beta, theta1, theta0) {
   return(n)
 }
 
-Two_Arm_Freq_cont = function(alpha, beta, theta1, theta0, nmin = 10, nmax = 5000, sims = 10000) {
-  z_alpha = qnorm(1 - alpha)
+Two_Arm_t_test_sim = function(alpha, beta, mu1, mu0, sigma1 = 1, sigma0 = 1, 
+                               nmin = 10, nmax = 5000, sims = 10000) {
   for (n in seq(nmin, nmax)) {
-    # Simulate trials under H0
-    null_trials1 = rbinom(sims, n, theta0)  
-    null_trials0 = rbinom(sims, n, theta0) 
-    null_means1 = null_trials1 / n          
-    null_means0 = null_trials0 / n          
-    null_dif = null_means1 - null_means0  
-    null_std = sqrt((null_means1 * (1 - null_means1) / n + (null_means0 * (1 - null_means0)) / n))  # Standard error
-    z_null = null_dif / null_std           # Z-score under H0
-    type1_error = mean(z_null > z_alpha)   # Type I error rate      
+    # Simulate H0: mu1 == mu0
+    x0_null = matrix(rnorm(sims * n, mean = mu0, sd = sigma0), nrow = sims)
+    x1_null = matrix(rnorm(sims * n, mean = mu0, sd = sigma1), nrow = sims)
     
-    # Simulate trials under H1 (alternative hypothesis: theta1 > theta0)
-    alt_trials1 = rbinom(sims, n, theta1)  # Treatment arm under H1
-    alt_trials0 = rbinom(sims, n, theta0)  # Control arm under H1
-    alt_means1 = alt_trials1 / n           # Sample mean for treatment arm
-    alt_means0 = alt_trials0 / n           # Sample mean for control arm
-    alt_dif = alt_means1 - alt_means0      # Difference in means
-    alt_std = sqrt((alt_means1 * (1 - alt_means1) / n + (alt_means0 * (1 - alt_means0)) / n))  # Standard error
-    z_alt = alt_dif / alt_std             # Z-score under H1
-    type2_error = mean(z_alt < z_alpha)   # Type II error rate
+    mean0_null = rowMeans(x0_null)
+    mean1_null = rowMeans(x1_null)
+    var0_null = apply(x0_null, 1, var)
+    var1_null = apply(x1_null, 1, var)
     
-    # Check if both Type I and Type II error criteria are met
+    se_null = sqrt(var0_null / n + var1_null / n)
+    t_null = (mean1_null - mean0_null) / se_null
+    
+    df_null = ( (var0_null/n + var1_null/n)^2 ) / 
+      ( (var0_null^2) / (n^2 * (n - 1)) + (var1_null^2) / (n^2 * (n - 1)) )
+    
+    t_alpha = qt(1 - alpha, df = df_null)
+    type1_error = mean(t_null > t_alpha)
+    
+    # Simulate H1: mu1 > mu0
+    x0_alt = matrix(rnorm(sims * n, mean = mu0, sd = sigma0), nrow = sims)
+    x1_alt = matrix(rnorm(sims * n, mean = mu1, sd = sigma1), nrow = sims)
+    
+    mean0_alt = rowMeans(x0_alt)
+    mean1_alt = rowMeans(x1_alt)
+    var0_alt = apply(x0_alt, 1, var)
+    var1_alt = apply(x1_alt, 1, var)
+    
+    se_alt = sqrt(var0_alt / n + var1_alt / n)
+    t_alt = (mean1_alt - mean0_alt) / se_alt
+    
+    df_alt = ( (var0_alt/n + var1_alt/n)^2 ) / 
+      ( (var0_alt^2) / (n^2 * (n - 1)) + (var1_alt^2) / (n^2 * (n - 1)) )
+    
+    t_alpha_alt = qt(1 - alpha, df = df_alt)
+    type2_error = mean(t_alt < t_alpha_alt)
+    
     if (type1_error <= alpha && type2_error <= beta) {
-      return(n)  # Return the required sample size per arm
+      return(n)
     }
   }
-  
-  # If no suitable sample size is found within the range
-  return(paste("Sample size exceeds maximum limit (nmax =", nmax, ")"))
+  return(NA)  # if no suitable n is found
 }
