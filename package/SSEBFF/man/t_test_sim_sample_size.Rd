@@ -1,0 +1,62 @@
+\name{t_test_sim_sample_size}
+\alias{t_test_sim_sample_size}
+\title{Simulation-Based Sample Size Calculation for One- or Two-Sample t-Tests}
+\description{
+Estimate the required sample size per group using Monte Carlo simulation to ensure type I and II errors are below specified thresholds for t-tests.
+}
+\usage{
+t_test_sim_sample_size(alpha, beta, mu1, mu0,
+                       sigma1 = 1, sigma0 = 1,
+                       type = "two.sample",
+                       nmin = 10, nmax = 5000, sims = 10000)
+}
+\arguments{
+  \item{alpha}{Significance level (type I error), e.g., 0.05.}
+  \item{beta}{Type II error (1 - power), e.g., 0.2.}
+  \item{mu1}{Mean under the alternative hypothesis (treatment).}
+  \item{mu0}{Mean under the null hypothesis (control).}
+  \item{sigma1}{Standard deviation in treatment group; defaults to 1.}
+  \item{sigma0}{Standard deviation in control group; defaults to 1.}
+  \item{type}{\code{"one.sample"} or \code{"two.sample"} Welch t-test.}
+  \item{nmin}{Minimum sample size to consider.}
+  \item{nmax}{Maximum sample size to consider.}
+  \item{sims}{Number of simulations per sample size value.}
+}
+\details{
+Simulates \code{sims} data sets per sample size. For each sample size, it:
+\itemize{
+  \item Simulates null and alternative samples.
+  \item Computes empirical type I and type II error rates via t-tests.
+  \item Returns the first sample size where both rates are below specified thresholds.
+}
+Useful when assumptions of normal-theory calculations are questionable or exact power is needed under heteroskedasticity.
+}
+\value{
+An integer: the smallest sample size per arm (or for the single group in a one-sample test) that meets the desired error thresholds. Returns \code{NA} if no such sample size is found within the search bounds.
+}
+\references{
+%% ~put references to the literature/web site here ~
+}
+\author{
+%%  ~~who you are~~
+}
+\note{
+%%  ~~further notes~~
+}
+
+%% ~Make other sections like Warning with \section{Warning }{....} ~
+
+\seealso{
+%% ~~objects to See Also as \code{\link{help}}, ~~~
+}
+\examples{
+# Two-sample Welch t-test, normal data
+t_test_sim_sample_size(alpha = 0.05, beta = 0.2,
+                       mu1 = 1.2, mu0 = 1.0,
+                       sigma1 = 1, sigma0 = 1)
+
+# One-sample t-test
+t_test_sim_sample_size(alpha = 0.05, beta = 0.2,
+                       mu1 = 1.2, mu0 = 1.0,
+                       type = "one.sample")
+}
