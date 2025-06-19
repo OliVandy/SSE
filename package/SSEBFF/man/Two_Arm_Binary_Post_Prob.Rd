@@ -26,12 +26,12 @@ Two_Arm_Binary_Post_Prob(obs_t, obs_c, n, margin,
 \details{
 This function calculates the posterior probability that the difference in response rates between treatment and control groups exceeds a user-defined margin. The calculation uses Beta priors for the true proportions and simulates from the posterior distributions via the Beta-Binomial conjugate model.
 
-The prior_weight argument allows for adjusting the raw posterior probability in a weighted fashion, consistent with robust Bayesian updating. For prior_weight = 0.5, the posterior is unadjusted (i.e., equal to the raw Monte Carlo estimate). Values closer to 0 or 1 bias the posterior toward a more skeptical or enthusiastic prior stance, respectively.
+The \code{prior_weight} argument allows for adjusting the raw posterior probability in a weighted fashion, consistent with robust Bayesian updating. For \code{prior_weight = 0.5}, the posterior is unadjusted (i.e., equal to the raw Monte Carlo estimate). Values closer to 0 or 1 bias the posterior toward a more skeptical or enthusiastic prior stance, respectively.
 
 This function is a building block for sample size calculations, decision-theoretic evaluation, and sensitivity analyses in binary outcome trials.
 }
 \value{
-  Posterior probability (possibly adjusted) that \( p_t - p_c > \text{margin} \).
+  Posterior probability (possibly adjusted) that \code{p_t - p_c > margin}.
 }
 \references{
 %% ~put references to the literature/web site here ~
