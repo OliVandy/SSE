@@ -31,35 +31,9 @@ Two_Arm_Standard_SSE_Design(
 }
 \value{
 A numeric vector of length 4:  
-\describe{
-  \item{\code{mean_treat}}{Observed proportion of successes in the treatment arm.}
-  \item{\code{mean_ctrl}}{Observed proportion of successes in the control arm.}
-  \item{\code{decision}}{Final decision indicator: \code{1} = success, \code{0} = futility.}
-  \item{\code{n_total}}{Total sample size actually observed (may be \code{n_0} if stopped early).}
-}
 }
 \details{
 %%  ~~ If necessary, more details than the description above ~~
-}
-\value{
-A numeric vector of length 4:  
-\details{
-\strong{Without interim look} (\code{interim = FALSE}):  
-All \code{n_f} patients per arm are enrolled.  A one‑sided z‑test is computed
-\deqn{Z = \frac{\bar{Y}_{\mathrm{ctrl}} - \bar{Y}_{\mathrm{treat}} + \theta_s}
-            {\sqrt{\frac{\bar{Y}_{\mathrm{ctrl}}(1-\bar{Y}_{\mathrm{ctrl}}) +
-                         \bar{Y}_{\mathrm{treat}}(1-\bar{Y}_{\mathrm{treat}})}{n_f}}}}
-and treatment is declared superior if \code{pnorm(Z, lower.tail = FALSE) < alpha}.
-
-\strong{With interim look} (\code{interim = TRUE}):  
-After \code{n_0} patients/arm, a Bayesian posterior probability
-\eqn{P(H_1 \mid \text{data})} is computed with a Beta–Binomial model
-(using \code{Two_Arm_Post_Prob_H1_Sim}).  
-\itemize{
-  \item If the posterior \(\ge c\): stop early for success.  
-  \item If the posterior \(\le c_s\): stop early for futility.  
-  \item Otherwise, enrol to \code{n_f} per arm and apply the same z‑test as above.  
-}
 }
 \references{
 %% ~put references to the literature/web site here ~
