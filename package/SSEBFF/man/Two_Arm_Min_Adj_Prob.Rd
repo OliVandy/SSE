@@ -1,6 +1,6 @@
 \name{Two_Arm_Min_Adj_Prob}
 \alias{Two_Arm_Min_Adj_Prob}
-title{Minimum Adjusted Posterior Probability Across Outcomes for Given Difference}
+\title{Minimum Adjusted Posterior Probability Across Outcomes for Given Difference}
 \description{
 Searches all outcome combinations with a fixed success difference and returns the one with the smallest adjusted posterior probability.
 }
