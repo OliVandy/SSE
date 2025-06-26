@@ -1,16 +1,15 @@
-\name{Two_Arm_Gamma_Min_Effect}
+\name{Two_Arm_Gamma_Merge}
 \alias{Two_Arm_Gamma_Min_Effect}
-\alias{Two_Arm_Gamma_Post_Prob.Rd}
+\alias{Two_Arm_Gamma_Post_Prob}
 \alias{Two_Arm_Gamma_Sample_Size}
 \title{
-  Two_Arm_Gamma_Min_Effect: Minimum Posterior Probability under Gamma Model
-  Two_Arm_Gamma_Min_Effect: Posterior Probability for Difference in Rates (Gamma-Poisson Model)
-  Two_Arm_Gamma_Sample_Size: Bayesian Sample Size Calculation for Gamma Outcomes
+  Gamma-Poisson Model for Two-Arm Trials
 }
 \description{
-  1. Simulates outcomes under a Gamma-Poisson model to find the minimum posterior probability of superiority for a given sample size and effect size, assuming the control rate is drawn from a Gamma prior.
-  2. Computes the posterior probability that the treatment event rate exceeds the control rate by a threshold using Gamma priors and Poisson likelihoods.
-  3. Computes the minimum sample size needed to achieve a posterior probability of superiority greater than or equal to a critical threshold, under a Gamma-Poisson model for count outcomes.
+  The posterior probability is the probability of the alternative hypothesis: in this case, that the count of the treatment group has a higher event rate than count control.
+  1. Min Effect: Simulates outcomes under a Gamma-Poisson model to find the minimum posterior probability of superiority for a given sample size and effect size, assuming the control rate is drawn from a Gamma prior. /n
+  2. Post Prob: Computes the posterior probability that the treatment event rate exceeds the control rate by a threshold using Gamma priors and Poisson likelihoods./n
+  3. Sample Size: Computes the minimum sample size needed to achieve a posterior probability of superiority greater than or equal to a critical threshold, under a Gamma-Poisson model for count outcomes.
 }
 \usage{
 Two_Arm_Gamma_Min_Effect(effect_size, sample_size, threshold,
@@ -25,47 +24,33 @@ Two_Arm_Gamma_Sample_Size(threshold, crit, effect_size,
                           quant = 0.5, s_reps = 1000, reps = 10000)
 }
 \arguments{
-  \item{effect_size}{The assumed treatment effect (difference in means).}
+  \item{effect_size}{Assumed difference in means between treatment and control.}
   \item{sample_size}{Sample size per arm.}
-  \item{threshold}{Posterior probability threshold for superiority.}
+  \item{threshold}{Minimum difference in rates to be declared effective.}
   \item{a_t}{Shape parameter for the Gamma prior on treatment group rate.}
   \item{b_t}{Rate parameter for the Gamma prior on treatment group rate.}
   \item{a_c}{Shape parameter for the Gamma prior on control group rate.}
   \item{b_c}{Rate parameter for the Gamma prior on control group rate.}
-  \item{quant}{Weighting factor for posterior adjustment (default is 0.5, i.e., no adjustment).}
+  \item{quant}{Weighting factor for quantile posterior adjustment (default is 0.5, i.e., no adjustment).}
   \item{s_reps}{Number of simulations for prior sampling (default 10000).}
   \item{reps}{Number of posterior simulations per trial (default 10000).}
   \item{count_treat}{Number of events in the treatment group.}
   \item{count_ctrl}{Number of events in the control group.}
-  \item{sample_size}{Total time or exposure (same for both groups).}
-  \item{threshold}{Minimum difference in rates to be declared effective.}
-  \item{a_t, b_t}{Gamma prior shape and rate for treatment.}
-  \item{a_c, b_c}{Gamma prior shape and rate for control.}
-  \item{quant}{Quantile adjustment for prior belief (0.5 = no adjustment).}
   \item{simulations}{Number of posterior draws.}
-  \item{threshold}{Posterior superiority threshold to assess.}
   \item{crit}{Minimum acceptable posterior probability for design success.}
-  \item{effect_size}{Assumed difference in means between treatment and control.}
-  \item{a_t}{Shape parameter for Gamma prior on treatment rate.}
-  \item{b_t}{Rate parameter for Gamma prior on treatment rate.}
-  \item{a_c}{Shape parameter for Gamma prior on control rate.}
-  \item{b_c}{Rate parameter for Gamma prior on control rate.}
   \item{min_n}{Minimum sample size to consider (default 5).}
   \item{max_n}{Maximum sample size to consider (default 100).}
-  \item{quant}{Weight for posterior adjustment (default 0.5 = unadjusted).}
-  \item{s_reps}{Number of prior simulations (default 1000).}
-  \item{reps}{Number of posterior draws per evaluation (default 10000).}
 }
 \details{
 %%  ~~ If necessary, more details than the description above ~~
 }
 \value{
-  1. A list with elements:
+  1. Min Effect: A list with elements:
   \item{y1}{Simulated event count for treatment group.}
   \item{y2}{Simulated event count for control group.}
   \item{min_xi}{Minimum posterior probability of superiority observed.}
-  2. A scalar: posterior probability (adjusted if \code{quant} ≠ 0.5).
-  3. A list with:
+  2. Post Prob: A scalar: posterior probability (adjusted if \code{quant} ≠ 0.5)./n
+  3. Sample Size: A list with:
   \item{n}{Minimum sample size achieving the target probability.}
   \item{yd}{Required outcome difference.}
   \item{prob_h1_vec}{Vector of posterior probabilities across iterations.}
