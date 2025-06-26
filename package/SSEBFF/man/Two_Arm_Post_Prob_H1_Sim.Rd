@@ -1,6 +1,5 @@
 \name{Two_Arm_Post_Prob_H1_Sim}
 \alias{Two_Arm_Post_Prob_H1_Sim}
-%- Also NEED an '\alias' for EACH other topic documented here.
 \title{Posterior Probability Simulation for Two-Arm Bayesian Comparison}
 \description{
   Estimates the posterior probability that the treatment group has a higher success rate than the control group by more than a given threshold \code{delta}, using simulation.
