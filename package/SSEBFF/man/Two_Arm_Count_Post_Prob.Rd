@@ -2,8 +2,8 @@
 \alias{Two_Arm_Count_Post_Prob}
 \alias{Two_Arm_Count_Min_Effect}
 \title{
-  1. Posterior Probability for Count Outcomes (Gamma-Poisson)
-  2. Minimum Posterior Probability for Count Outcome
+  1. Post Prob: Posterior Probability for Count Outcomes (Gamma-Poisson)
+  2. Min Effect: Minimum Posterior Probability for Count Outcome
 }
 \description{
   1. Computes the posterior probability that the difference between treatment and control group rates exceeds a threshold under Gamma-Poisson priors.
