@@ -1,15 +1,21 @@
 \name{Two_Arm_Count_Post_Prob}
 \alias{Two_Arm_Count_Post_Prob}
+\alias{Two_Arm_Count_Min_Effect}
 \title{
-  Posterior Probability for Count Outcomes (Gamma-Poisson)
+  1. Posterior Probability for Count Outcomes (Gamma-Poisson)
+  2. Minimum Posterior Probability for Count Outcome
 }
 \description{
-  Computes the posterior probability that the difference between treatment and control group rates exceeds a threshold under Gamma-Poisson priors.
+  1. Computes the posterior probability that the difference between treatment and control group rates exceeds a threshold under Gamma-Poisson priors.
+  2. Simulates Gamma-Poisson outcomes to determine the minimum posterior probability of superiority over many random realizations of the control rate.
 }
 \usage{
 Two_Arm_Count_Post_Prob(count_treat, count_ctrl, sample_size,
                         threshold, a_t, b_t, a_c, b_c,
                         quant = 0.5, simulations = 1e4)
+Two_Arm_Count_Min_Effect(effect_size, sample_size, threshold,
+                         a_t, b_t, a_c, b_c,
+                         quant = 0.5, s_reps = 1e4, reps = 1e4)
 }
 \arguments{
   \item{count_treat}{Observed event count in the treatment group.}
@@ -22,6 +28,9 @@ Two_Arm_Count_Post_Prob(count_treat, count_ctrl, sample_size,
   \item{b_c}{Rate parameter for Gamma prior on control rate.}
   \item{quant}{Weight for posterior adjustment (default 0.5).}
   \item{simulations}{Number of posterior draws (default 10000).}
+  \item{effect_size}{Assumed treatment effect (difference in mean rates).}
+  \item{s_reps}{Number of prior control rate simulations.}
+  \item{reps}{Posterior draws per simulated trial.}
 }
 \details{
 %%  ~~ If necessary, more details than the description above ~~
