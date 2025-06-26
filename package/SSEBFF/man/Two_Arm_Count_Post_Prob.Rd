@@ -36,7 +36,12 @@ Two_Arm_Count_Min_Effect(effect_size, sample_size, threshold,
 %%  ~~ If necessary, more details than the description above ~~
 }
 \value{
-  Posterior probability that treatment rate exceeds control by more than the threshold.
+  1. Posterior probability that treatment rate exceeds control by more than the threshold.
+
+  2. A list with elements:
+  \item{y1}{Event count in the treatment group.}
+  \item{y2}{Event count in the control group.}
+  \item{prob}{Minimum posterior probability observed.}
 }
 \references{
 %% ~put references to the literature/web site here ~
@@ -64,5 +69,16 @@ Two_Arm_Count_Post_Prob(
   a_c = 0.05, b_c = 0.05,
   quant = 0.5,
   simulations = 1000
+)
+# Find the worst-case scenario for count data posterior
+Two_Arm_Count_Min_Effect(
+  effect_size = 0.2,
+  sample_size = 30,
+  threshold = 1,
+  a_t = 0.05, b_t = 0.05,
+  a_c = 0.05, b_c = 0.05,
+  quant = 0.5,
+  s_reps = 100,
+  reps = 1000
 )
 }
