@@ -1,6 +1,5 @@
 \name{One_Arm_Post_Prob_H1}
 \alias{One_Arm_Post_Prob_H1}
-\alias{One_Arm_Post_Prob_Theta}
 \title{Posterior Probability for H1 Under Different Outcome Types}
 \description{
 Computes a transformed posterior probability of a hypothesis \code{H1} holding, given the probability that \code{theta > theta0}. Applies to binary, continuous, or count outcomes.
