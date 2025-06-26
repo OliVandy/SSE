@@ -1,11 +1,14 @@
 \name{One_Arm_Freq_cont}
 \alias{One_Arm_Freq_cont}
+\alias{One_Arm_Freq_theory}
 \title{Monte Carlo-Based Sample Size Calculation for One-Arm Binomial Test}
 \description{
-  Estimates the minimum required sample size using simulations to meet Type I and Type II error constraints for a one-arm binomial test.
+  1. cont: Estimates the minimum required sample size using simulations to meet Type I and Type II error constraints for a one-arm binomial test./n
+  2. theory: Estimates the minimum required sample size for a one-arm binomial test based on theoretical (normal approximation) formulas.
 }
 \usage{
 One_Arm_Freq_cont(alpha, beta, theta, theta_star, nmin = 10, nmax = 5000, sims = 10000)
+One_Arm_Freq_theory(alpha, beta, theta, theta_star)
 }
 \arguments{
   \item{alpha}{Significance level (Type I error rate).}
@@ -20,7 +23,7 @@ One_Arm_Freq_cont(alpha, beta, theta, theta_star, nmin = 10, nmax = 5000, sims =
   The minimum integer sample size \(n\) that satisfies both error rate criteria.
 }
 \details{
-  This function simulates binomial trials under both the null and alternative hypotheses to empirically check whether the Type I and Type II errors are within the specified bounds. It increases the sample size from \code{nmin} to \code{nmax} until both conditions are met.
+  These functions calculates the minimum required sample size under both the null and alternative hypotheses to empirically check whether the Type I and Type II errors are within the specified bounds. It increases the sample size from \code{nmin} to \code{nmax} until both conditions are met.
 }
 \references{
 %% ~put references to the literature/web site here ~
@@ -39,6 +42,7 @@ One_Arm_Freq_cont(alpha, beta, theta, theta_star, nmin = 10, nmax = 5000, sims =
 }
 \examples{
 One_Arm_Freq_cont(alpha = 0.05, beta = 0.2, theta = 0.6, theta_star = 0.5)
+One_Arm_Freq_theory(alpha = 0.05, beta = 0.2, theta = 0.6, theta_star = 0.5)
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory (show via RShowDoc("KEYWORDS")):
