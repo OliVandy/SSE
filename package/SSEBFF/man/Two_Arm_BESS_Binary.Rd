@@ -1,7 +1,6 @@
 \name{Two_Arm_BESS_Binary}
 \alias{Two_Arm_BESS_Binary}
-%- Also NEED an '\alias' for EACH other topic documented here.
-\title{Sample Size Estimation Using Bayesian Error Spending Strategy (BESS) for Binary Outcomes in Two-Arm Trials}
+\title{Sample Size Estimation Using Bayesian Estimator of Sample Size (BESS) for Binary Outcomes in Two-Arm Trials}
 \description{
   Determines the minimum sample size required in a two-arm trial with binary outcomes, using a Bayesian error spending strategy (BESS) approach. This is based on controlling the posterior probability \code{xi} to exceed a cutoff value \code{c} when the observed treatment effect exceeds a certain proportion \code{e}.
 }
