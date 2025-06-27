@@ -1,6 +1,5 @@
 \name{Two_Arm_Standard_SSE_Design}
 \alias{Two_Arm_Standard_SSE_Design}
-%- Also NEED an '\alias' for EACH other topic documented here.
 \title{Standard Frequentist Two‑Arm Design with Optional Interim Bayesian Stop}
 \description{
 Simulates a two‑arm clinical trial with binary outcomes.  
