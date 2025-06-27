@@ -2,7 +2,7 @@
 \alias{Two_Arm_BESS_SSR_Design}
 \title{Bayesian Error Spending Strategy with Sample Size Re-Estimation for Binary Two-Arm Trials}
 \description{
-  Performs a Bayesian Error Spending Strategy (BESS) with interim analysis and optional sample size re-estimation for a binary outcome two-arm clinical trial.
+  Performs a Bayesian Estimator of Sample Size (BESS) with interim analysis and optional sample size re-estimation for a binary outcome two-arm clinical trial.
 }
 \usage{
 Two_Arm_BESS_SSR_Design(theta_H, theta_L, theta_s, c, c_s, n0,
