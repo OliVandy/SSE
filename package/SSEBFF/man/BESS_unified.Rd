@@ -1,8 +1,8 @@
 \name{BESS_unified}
 \alias{BESS_unified}
-\title{Bayesian Evidence-Based Sample Size Estimation (BESS) for One- and Two-Sample Designs}
+\title{Bayesian Estimator of Sample Size (BESS) for One- and Two-Sample Designs}
 \description{
-Estimates the minimum required sample size to achieve a desired posterior probability threshold \code{c} based on Bayesian inference, supporting binary, continuous, and count outcomes for one-sample designs, and binary outcomes for two-sample designs.
+Estimates the minimum required sample size to achieve a desired posterior probability threshold \code{c} based on Bayesian inference, supporting binary, continuous, and count outcomes for one-sample designs, and binary outcomes for two-sample designs. This is based on controlling the posterior probability \code{xi} to exceed a cutoff value \code{c} when the observed treatment effect exceeds a certain proportion \code{e}.
 }
 \usage{
 BESS_unified(theta0, c, e, type = "one.sample", 
@@ -34,6 +34,7 @@ BESS_unified(theta0, c, e, type = "one.sample",
 \details{
 This function supports unified Bayesian sample size planning under a range of outcome types and model assumptions.
 The function checks whether the posterior probability (or its adjusted version) exceeds a threshold \code{c} for simulated or observed data, scanning a range of sample sizes to determine the minimum needed.
+The function iteratively increases the sample size starting from \code{n_min} and computes the minimum posterior probability \code{xi} for an observed difference \code{yd = floor(e * n)} using \code{Two_Arm_Find_Min_Xi}. The smallest sample size for which the posterior probability exceeds \code{c} is returned.
 }
 \value{
 A list containing:
