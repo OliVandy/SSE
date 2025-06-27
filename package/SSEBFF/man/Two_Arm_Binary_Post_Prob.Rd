@@ -5,7 +5,7 @@
   Posterior Probability and the minimum Posterior Probability for Given Difference in Binary Outcomes (Two-Arm)
 }
 \description{
-  Computes the (possibly weighted) posterior probability that the difference in response probabilities \( p_t - p_c \) exceeds a specified margin.\n
+  Computes the (possibly weighted) posterior probability that the difference in response probabilities \( p_t - p_c \) exceeds a specified margin.\cr
   For a given observed difference in responders, finds the worst-case (minimum) posterior probability across all valid combinations of treatment and control responses that yield that difference.
 }
 \usage{
@@ -41,8 +41,8 @@ These functions are building blocks for sample size calculations, decision-theor
 In particular, in conjunction with \code{BESS_binary()}, these functions support robust sample size planning under uncertainty and variation in observed outcomes.
 }
 \value{
-  1. Post Prob: Posterior probability (possibly adjusted) that \code{p_t - p_c > margin}.\n
-  2. Min Prob: A list with:\n
+  1. Post Prob: Posterior probability (possibly adjusted) that \code{p_t - p_c > margin}.\cr
+  2. Min Prob: A list with:\cr
   \item{tr}{Treatment responder count (worst-case).}
   \item{ct}{Control responder count (worst-case).}
   \item{min_prob}{Minimum posterior probability observed for the given difference.}
