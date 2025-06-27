@@ -6,9 +6,9 @@
   Gamma-Poisson Model for Two-Arm Trials
 }
 \description{
-  The posterior probability is the probability of the alternative hypothesis: in this case, that the count of the treatment group has a higher event rate than count control.\n
-  1. Min Effect: Simulates outcomes under a Gamma-Poisson model to find the minimum posterior probability of superiority for a given sample size and effect size, assuming the control rate is drawn from a Gamma prior. \n
-  2. Post Prob: Computes the posterior probability that the treatment event rate exceeds the control rate by a threshold using Gamma priors and Poisson likelihoods.\n
+  The posterior probability is the probability of the alternative hypothesis: in this case, that the count of the treatment group has a higher event rate than count control.\cr
+  1. Min Effect: Simulates outcomes under a Gamma-Poisson model to find the minimum posterior probability of superiority for a given sample size and effect size, assuming the control rate is drawn from a Gamma prior. \cr
+  2. Post Prob: Computes the posterior probability that the treatment event rate exceeds the control rate by a threshold using Gamma priors and Poisson likelihoods.\cr
   3. Sample Size: Computes the minimum sample size needed to achieve a posterior probability of superiority greater than or equal to a critical threshold, under a Gamma-Poisson model for count outcomes.
 }
 \usage{
