@@ -26,7 +26,7 @@ library(SSEBFF)
 ```
 We will demonstrate the package function through example simulations. In this package we provide a combined function for sample size estimation for both one-arm and two-arm trials, which can be used to estimate the sample size needed to achieve a specified power and significance level.
 
-\section*{Example: Binary Sample Size Estimationfpor One-Arm and Two-Arm Trials}
+\section*{Example: Binary Sample Size Estimation for One-Arm and Two-Arm Trials}
 ```{r}
 
 ```
@@ -37,6 +37,9 @@ We could also use the package to estimate sample size for continuous outcomes. t
 ```{r}
 
 ```
+
+\section*{Conclusion}
+The SSEBFF package provides a frequentist approach for sample size estimations. By using the functions provided, researchers can easily calculate the required sample sizes for both one-arm and two-arm trials, ensuring that their studies are adequately powered to detect meaningful effects.
 
 \section*{References}
 \begin{itemize}
