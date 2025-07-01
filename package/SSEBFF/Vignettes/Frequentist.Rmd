@@ -1,0 +1,44 @@
+---
+title: "Sample Size Estimation for Clinical Trials in Multiple Paradigms-Frequentist"
+author: "Rachel Zhuang and R. Oliver VandenBerg"
+date: "2025-06-30"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Sample Size Estimation for Clinical Trials in Multiple Paradigms-Frequentist}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+The SSEBFF package is designed to assist in sample size estimation for clinical trials across various paradigms, including frequentist, Bayesian, and Non-inferiority. This vignette focuses on the frequentist paradigm.
+
+\section*{Introduction}
+Sample size estimation is a critical step in the design of clinical trials. The SSEBFF package provides tools for estimating sample sizes in frequentist clinical trial designs.
+
+In frequentist paradigms, sample size estimation typically involves determining the number of participants needed to achieve a specified level of statistical power, given a hypothesized effect size and significance level. The package includes functions that allow users to perform these calculations for various types of clinical trials, including those with binary and continuous outcomes.
+
+The hypothesis testing framework used in frequentist paradigms relies on the concept of null and alternative hypotheses. In one-arm practicing, the null hypothesis typically states that the treatment has no effect ($H_0$: $\theta \le \theta^* $, where $ \theta^* $ is the threshold and is also depicted as $\theta_0$ or $\Delta$), while the alternative hypothesis posits that the treatment does have an effect.($H_a$: $\theta > \theta^* $) The sample size is calculated to ensure that the trial has sufficient power to detect a true effect if it exists. While in two-arm, the null hypothesis states that there is no difference between the two treatment groups($H_0$: $\theta_T = \theta_C$, where $\theta_T$ is the treatment group parameter, and $\theta_C$ is the control group parameter), and the alternative hypothesis states that there is a difference($H_a$: $\theta_T \ne \theta_C$).
+
+```{r setup}
+library(SSEBFF)
+```
+We will demonstrate the package function through example simulations. In this package we provide a combined function for sample size estimation for both one-arm and two-arm trials, which can be used to estimate the sample size needed to achieve a specified power and significance level.
+
+\section*{Example: Binary Sample Size Estimationfpor One-Arm and Two-Arm Trials}
+```{r}
+
+```
+
+We could also use the package to estimate sample size for continuous outcomes. t_test_sim_sample_size is a function that estimates the sample size needed for a t-test in both one-arm and two-arm trials, and it uses the Monte Carlo simulation.
+
+\section*{Example: Continuous Sample Size Estimation for One-Arm and Two-Arm Trials Using T-test}
+```{r}
+
+```
+
+\section*{References}
+\begin{itemize}
+\item Y.Ji and D.Bi, "A Bayesian Estimator of Sample Size" (2024) \textit{arXiv preprint arXiv:2404.07923}
+\end{itemize}
