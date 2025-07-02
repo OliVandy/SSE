@@ -1,0 +1,73 @@
+---
+title: "Sample Size Estimation for Clinical Trials in Multiple Paradigms-Frequentist-Bayesian"
+author: "Rachel Zhuang and R. Oliver VandenBerg"
+date: "2025-07-01"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Sample Size Estimation for Clinical Trials in Multiple Paradigms-Frequentist}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+The SSEBFF package is designed to assist in sample size estimation for clinical trials across various paradigms, including frequentist, Bayesian, and Non-inferiority. This vignette focuses on the Bayesian paradigm.
+
+\section*{Introduction}
+Sample size estimation is a critical step in the design of clinical trials. The SSEBFF package provides tools for estimating sample sizes in Bayesian clinical trial designs.
+
+In Bayesian paradigms, the sample size can be estimated using a Bayesian estimator that incorporates prior information and the desired posterior probability of success. The package allows users to specify the prior distribution, the effect size, and the desired level of statistical power.
+
+The hypothesis testing framework used in Bayesian paradigms is different from frequentist approaches. In Bayesian analysis, we calculate the posterior probability of the hypothesis given the data and prior information. The posterior probability is the probability of the alternative hypothesis being true after observing the data, which is a key difference from the frequentist approach that relies on p-values.
+
+```{r setup}
+library(SSEBFF)
+```
+We will demonstrate the package function through example simulations. In this package we provide a combined function for sample size estimation for both one-arm and two-arm trials. 
+
+\section*{BESS_unified}
+Estimates the minimum required sample size to achieve a desired posterior probability threshold c based on Bayesian inference, supporting binary, continuous, and count outcomes for one-sample designs, and binary outcomes for two-sample designs. This is based on controlling the posterior probability xi to exceed a cutoff value c when the observed treatment effect exceeds a certain proportion e.
+
+e is the assumed value of $\theta$ under $H_a$ used to simulate or compute the probability of detecting an effect. In other words, how strong you think the treatment will work before you actually run the study. You’re guessing: “If I give this new drug to people, I think maybe it’ll help about 60% of them." you assume $\theta$ = 0.6 when simulating data.
+
+c is the threshold set for posterior probability. To be more specific, it is how sure we want to be (statistically) before we say the treatment works. Eg. c = 0.9 means you want to be at least 90% sure the treatment is better, or 90% sure that we will reject the null hypothesis.
+```{r}
+
+```
+
+\section*{Post_Prob_Bayes: Posterior Probability}
+When we know the sample size, we could then use the `Post_Prob_Bayes` function to compute the posterior probability that a parameter exceeds a threshold using Bayesian updating for one-sample or two-sample scenarios. Supports binary, continuous, and count outcomes for one-sample tests.
+
+# further explanation eg. threshold, prior, margin, delta, one-arm and two-arm, etc.
+```{r}
+
+```
+
+\section*{Two_Arm_BESS_SSR_Design}
+Because in real-world trials, uncertainty is high early on, and the original guess (the assumed effect size e) might be wrong, we need to restimate the sample size. This function performs a Bayesian Estimator of Sample Size (BESS) with interim analysis and optional sample size re-estimation for a binary outcome two-arm clinical trial. 
+
+It starts with an interim analysis at a small sample size n0, then Decides whether to stop early for success or futility, or continue to the next stage. If continuing, re-estimates the sample size using Bayesian Expected Sample Size (BESS) methods based on observed interim data. Finally, it makes a decision after simulating the second-stage data.
+
+In a medical trial, we want to start with a small sample size, say 30 patients, to see if the treatment is working. If it looks promising, we can then increase the sample size to get more data and make a better decision. In this case, n0 = 30.
+
+c_s is the posterior probability threshold for early futility. If the posterior probability of success is less than or equal to c_s, we stop the trial and declare futility. In the other hand, if the posterior probability of success is greater than or equal to c, we stop the trial and declare success.
+
+cap is when we want to set a maximum sample size for the trial. If cap = TRUE and the re-estimated sample size exceeds n_cap, we stop the trial and declare success.
+```{r}
+
+```
+
+\section*{Two_Arm_Binary_Post_Prob}
+
+```{r}
+
+```
+
+\section*{Conclusion}
+
+
+\section*{References}
+\begin{itemize}
+\item Y.Ji and D.Bi, "A Bayesian Estimator of Sample Size" (2024) \textit{arXiv preprint arXiv:2404.07923}
+\end{itemize}
