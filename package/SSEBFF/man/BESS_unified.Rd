@@ -16,7 +16,7 @@ BESS_unified(theta0, c, e, type = "one.sample",
   posterior distribution of the observed parameter (mean, proportion, or rate) is compared.
   Two-sample design: represents the minimum clinically meaningful difference between treatment and control groups
   (e.g., risk difference in binary outcomes). The design aims to ensure that the posterior probability that the treatment effect exceeds \code{theta0} reaches or exceeds threshold \code{c}.
-  # In other functions in this package, this parameter can also be referred to as \code{delta} or \code{threshold}.}
+  In other functions in this package, this parameter can also be referred to as \code{threshold}.}
   \item{c}{Critical posterior probability level to exceed (e.g., 0.95).}
   \item{e}{Evidence level used to simulate observed effect (e.g., observed proportion or mean).
   One-sample design: represents the expected true value of the outcome (e.g., response rate, average outcome, or event rate) under the assumed alternative scenario.
