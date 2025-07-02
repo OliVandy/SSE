@@ -1,10 +1,10 @@
 Post_Prob_Bayes = function(type = "one.sample", 
-                            n, theta0 = NULL, delta = NULL, 
-                            outcome = NULL, e = NULL, 
-                            a = 0.5, b = 0.5, sig = 1,
-                            Y_t = NULL, Y_c = NULL,
-                            a1 = 0.5, b1 = 0.5, a2 = 0.5, b2 = 0.5,
-                            q = 0.5, sim = 10000) {
+                           n, theta0 = NULL, delta = NULL, 
+                           outcome = NULL, e = NULL, 
+                           a = 0.5, b = 0.5, sig = 1,
+                           Y_t = NULL, Y_c = NULL,
+                           a1 = 0.5, b1 = 0.5, a2 = 0.5, b2 = 0.5,
+                           q = 0.5, sim = 10000) {
   
   # --- Input Checks ---
   if (!(type %in% c("one.sample", "two.sample"))) {
@@ -20,14 +20,13 @@ Post_Prob_Bayes = function(type = "one.sample",
   # === ONE SAMPLE POSTERIOR ===
   if (type == "one.sample") {
     if (is.null(outcome) || !(outcome %in% c(1,2,3))) {
-      stop("Please enter a valid outcome type: 1 = binary, 2 = continuous, 3 = count-data.")
+      stop("Please enter a valid outcome type: 1 = binary, 2 = continuous, 3 = count.")
     }
     if (is.null(e) || e < 0 || e > 1) {
       stop("Please enter an evidence level 'e' between 0 and 1.")
     }
     if (is.null(theta0)) stop("theta0 is required for one.sample.")
     
-    # Call posterior core
     prob <- switch(as.character(outcome),
                    "1" = {
                      post_a <- a + floor(e * n)
@@ -44,20 +43,40 @@ Post_Prob_Bayes = function(type = "one.sample",
                      post_a <- a + floor(e * n)
                      post_b <- b + n
                      pgamma(theta0, post_a, rate = post_b, lower.tail = FALSE)
-                   }
-    )
+                   })
   }
   
-  # === TWO SAMPLE POSTERIOR ===
+  # === TWO SAMPLE POSTERIOR (EXTENDED) ===
   if (type == "two.sample") {
     if (is.null(Y_t) || is.null(Y_c) || is.null(delta)) {
       stop("For type = 'two.sample', you must provide Y_t, Y_c, and delta.")
     }
+    if (is.null(outcome) || !(outcome %in% c(1,2,3))) {
+      stop("Please enter a valid outcome type: 1 = binary, 2 = continuous, 3 = count.")
+    }
     
-    pt_post <- rbeta(sim, a1 + Y_t, b1 + n - Y_t)
-    pc_post <- rbeta(sim, a2 + Y_c, b2 + n - Y_c)
-    pd_post <- pt_post - pc_post
-    prob <- mean(pd_post > delta)
+    prob <- switch(as.character(outcome),
+                   "1" = {
+                     pt_post <- rbeta(sim, a1 + Y_t, b1 + n - Y_t)
+                     pc_post <- rbeta(sim, a2 + Y_c, b2 + n - Y_c)
+                     pd_post <- pt_post - pc_post
+                     mean(pd_post > delta)
+                   },
+                   "2" = {
+                     sig2_t <- sig^2 / n
+                     sig2_c <- sig^2 / n
+                     post_var <- 1 / (1 / (b1^2) + 1 / sig2_c) + 1 / (1 / (b2^2) + 1 / sig2_t)
+                     mu_t <- (a2 / (b2^2) + Y_t / sig2_t) / (1 / (b2^2) + 1 / sig2_t)
+                     mu_c <- (a1 / (b1^2) + Y_c / sig2_c) / (1 / (b1^2) + 1 / sig2_c)
+                     diff_post <- rnorm(sim, mean = mu_t - mu_c, sd = sqrt(post_var))
+                     mean(diff_post > delta)
+                   },
+                   "3" = {
+                     pt_post <- rgamma(sim, shape = a2 + Y_t, rate = b2 + n)
+                     pc_post <- rgamma(sim, shape = a1 + Y_c, rate = b1 + n)
+                     pd_post <- pt_post - pc_post
+                     mean(pd_post > delta)
+                   })
   }
   
   # === Return Adjusted Posterior Probability ===
