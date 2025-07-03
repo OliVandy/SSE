@@ -148,3 +148,124 @@ BESS_unified = function(theta0, c, e, type = "one.sample",
     return(list(n = ss, yd = yd_n, n_seq = n_seq, vec = xi_list, yd_vec = yd_n_list, y1_vec = y1_list, y2_vec = y2_list))
   }
 }
+
+BESS_SSR_Design = function(type = "two.sample",
+                           theta_H = NULL, theta_L = NULL, theta_s,
+                           c, c_s, n0,
+                           outcome = NULL,
+                           a = 0.5, b = 0.5, sig = 1,
+                           a1 = 0.5, b1 = 0.5, a2 = 0.5, b2 = 0.5,
+                           q = 0.5, n_min = 1, n_max = 200,
+                           cap = FALSE, n_cap = 200) {
+  
+  if (!(type %in% c("one.sample", "two.sample"))) stop("type must be 'one.sample' or 'two.sample'")
+  
+  bess_int_dec <- NA
+  bess_dec <- NA
+  e_s <- n_s <- pH1_s <- NA
+  y_H <- y_L <- y_H_s <- y_L_s <- NULL
+  y <- y_s <- NULL
+  
+  ### === ONE SAMPLE DESIGN === ###
+  if (type == "one.sample") {
+    if (is.null(outcome)) stop("Please specify outcome (1 = binary, 2 = continuous, 3 = count) for one-arm.")
+    
+    if (outcome == 1) {
+      y <- rbinom(n0, 1, theta_H)
+      e_obs <- mean(y)
+    } else if (outcome == 2) {
+      y <- rnorm(n0, mean = theta_H, sd = sig)
+      e_obs <- mean(y)
+    } else if (outcome == 3) {
+      y <- rpois(n0, lambda = theta_H)
+      e_obs <- mean(y)
+    } else {
+      stop("Outcome must be 1 (binary), 2 (continuous), or 3 (count).")
+    }
+    
+    pH1 <- Post_Prob_Bayes(type = "one.sample", n = n0, theta0 = theta_s, outcome = outcome, e = e_obs,
+                           a = a, b = b, sig = sig, q = q)
+    
+    bess_int_dec <- ifelse(pH1 >= c, 1, ifelse(pH1 <= c_s, 0, 2))
+    
+    if (bess_int_dec == 2) {
+      a_ip <- a + sum(y)
+      b_ip <- b + n0 - sum(y)
+      if (outcome == 2) {
+        post_mu <- mean(y)
+      } else if (outcome == 3) {
+        a_ip <- a + sum(y)
+        b_ip <- b + n0
+        post_mu <- a_ip / b_ip
+      } else {
+        post_mu <- a_ip / (a_ip + b_ip)
+      }
+      e_s <- post_mu
+      
+      ss_result <- BESS_binary(margin = theta_s, threshold = c, delta = e_s,
+                               min_n = n_min, max_n = n_max, alpha1 = a_ip, beta1 = b_ip,
+                               prior_weight = 1, iterations = 10000)
+      n_s <- ss_result$n
+      if (cap && n_s > n_cap - n0) n_s <- n_cap - n0
+      
+      if (outcome == 1) {
+        y_s <- rbinom(n_s, 1, theta_H)
+      } else if (outcome == 2) {
+        y_s <- rnorm(n_s, mean = theta_H, sd = sig)
+      } else {
+        y_s <- rpois(n_s, lambda = theta_H)
+      }
+      
+      pH1_s <- Post_Prob_Bayes(type = "one.sample", n = n_s, theta0 = theta_s, outcome = outcome, e = mean(y_s),
+                               a = a_ip, b = b_ip, sig = sig, q = q)
+      bess_dec <- ifelse(pH1_s >= c, 1, 0)
+    }
+    
+    return(list(
+      y_n0 = y, pH1_int = pH1, bess_int_dec = bess_int_dec,
+      y_ns = y_s, e_s = e_s, n_s = n_s,
+      pH1_s = pH1_s, bess_fin_dec = bess_dec
+    ))
+  }
+  
+  ### === TWO SAMPLE DESIGN === ###
+  if (type == "two.sample") {
+    y_H <- rbinom(n0, 1, theta_H)
+    y_L <- rbinom(n0, 1, theta_L)
+    
+    pH1 <- Two_Arm_Post_Prob_H1_Sim(sum(y_L), sum(y_H), n0, -theta_s,
+                                    a1 = a1, b1 = b1, a2 = a2, b2 = b2, q = q)
+    bess_int_dec <- ifelse(pH1 >= c, 1, ifelse(pH1 <= c_s, 0, 2))
+    
+    if (bess_int_dec == 2) {
+      # Update priors
+      a1_ip <- a1 + sum(y_L)
+      b1_ip <- b1 + n0 - sum(y_L)
+      a2_ip <- a2 + sum(y_H)
+      b2_ip <- b2 + n0 - sum(y_H)
+      
+      post_theta_L <- a1_ip / (a1_ip + b1_ip)
+      post_theta_H <- a2_ip / (a2_ip + b2_ip)
+      e_s <- post_theta_L - post_theta_H
+      
+      ss_result <- Two_Arm_BESS_Binary(-theta_s, c, e_s, n_min, n_max,
+                                       a1 = a1_ip, b1 = b1_ip,
+                                       a2 = a2_ip, b2 = b2_ip, q = q)
+      n_s <- ss_result$n
+      if (cap && n_s > n_cap - n0) n_s <- n_cap - n0
+      
+      y_H_s <- rbinom(n_s, 1, theta_H)
+      y_L_s <- rbinom(n_s, 1, theta_L)
+      
+      pH1_s <- Two_Arm_Post_Prob_H1_Sim(sum(y_L_s), sum(y_H_s), n_s, -theta_s,
+                                        a1 = a1_ip, b1 = b1_ip, a2 = a2_ip, b2 = b2_ip, q = q)
+      bess_dec <- ifelse(pH1_s >= c, 1, 0)
+    }
+    
+    return(list(
+      y_H_n0 = y_H, y_L_n0 = y_L, pH1_int = pH1, bess_int_dec = bess_int_dec,
+      y_H_ns = y_H_s, y_L_ns = y_L_s, e_s = e_s, n_s = n_s,
+      pH1_s = pH1_s, bess_fin_dec = bess_dec
+    ))
+  }
+}
