@@ -23,7 +23,7 @@ One-arm trial means we are testing a single treatment against a null hypothesis.
 
 The hypothesis testing framework used in Bayesian paradigms is different from frequentist approaches. In Bayesian analysis, we calculate the posterior probability of the hypothesis given the data and prior information. The posterior probability is the probability of the alternative hypothesis being true after observing the data, which is a key difference from the frequentist approach that relies on p-values.
 
-```{r setup}
+```{r}
 library(SSEBFF)
 ```
 We will demonstrate the package function through example simulations. In this package we provide a combined function for sample size estimation for both one-arm and two-arm trials. 
