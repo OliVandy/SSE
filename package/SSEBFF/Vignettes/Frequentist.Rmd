@@ -21,24 +21,30 @@ In frequentist paradigms, sample size estimation typically involves determining 
 
 One-arm trial means we are testing a single treatment against a null hypothesis. Two-arm trial means we are comparing two treatments, like a new drug against a control treatment.
 
-The hypothesis testing framework used in frequentist paradigms relies on the concept of null and alternative hypotheses. In one-arm practicing, the null hypothesis typically states that the treatment has no effect ($H_0$: $\theta \le \theta^* $, where $ \theta^* $ is the threshold and is also depicted as $\theta_0$ or margin), while the alternative hypothesis posits that the treatment does have an effect.($H_a$: $\theta > \theta^* $) The sample size is calculated to ensure that the trial has sufficient power to detect a true effect if it exists. While in two-arm, the null hypothesis states that there is no difference between the two treatment groups($H_0$: $\theta_T \le \theta_C$, where $\theta_T$ is the treatment group parameter, and $\theta_C$ is the control group parameter), and the alternative hypothesis states that there is a difference($H_a$: $\theta_T > \theta_C$, or $H_a$: $\theta_T - \theta_C$ > $ \theta^* $).
-# We are doing a one-side test for one-arm trials, and a two-side test for two-arm trials. so less and equal to !!
+The hypothesis testing framework used in frequentist paradigms relies on the concept of null and alternative hypotheses. In one-arm practicing, the null hypothesis typically states that the treatment has no effect $(H_0: \theta \le \theta^*)$, where $\theta^*$ is the threshold and is also depicted as $\theta_0$ or margin), while the alternative hypothesis posits that the treatment does have an effect. $(H_a: \theta > \theta^*)$ The sample size is calculated to ensure that the trial has sufficient power to detect a true effect if it exists. While in two-arm, the null hypothesis states that there is no difference between the two treatment groups $(H_0: \theta_T \le \theta_C)$, where $\theta_T$ is the treatment group parameter, and $\theta_C$ is the control group parameter), and the alternative hypothesis states that there is a difference $(H_a: \theta_T > \theta_C)$, or $(H_a: \theta_T - \theta_C > \theta^*)$).
+# We are doing a one-side test for one-arm trials, and a two-side test for two-arm trials. so less and equal to!!
 ```{r setup}
 library(SSEBFF)
 ```
 We will demonstrate the package function through example simulations. In this package we provide a combined function for sample size estimation for both one-arm and two-arm trials, which can be used to estimate the sample size needed to achieve a specified power and significance level.
 
 \section*{Example: Binary Sample Size Estimation for One-Arm and Two-Arm Trials}
+Scenario: We want to estimate the sample size needed to detect a difference in proportions between right-handed and left-handed individuals.
 ```{r}
-# Scenario
-# Right handed Vs. Left handed
+Freq_Binary_theoretical(alpha = 0.05, beta = 0.2, theta1 = 0.9, theta0 = 0.2)
+# theta1 is the expected proportion of right-handed individuals, and theta0 is the expected proportion of left-handed individuals.
 ```
 
 We could also use the package to estimate sample size for continuous outcomes. t_test_sim_sample_size is a function that estimates the sample size needed for a t-test in both one-arm and two-arm trials, and it uses the Monte Carlo simulation.
 
 \section*{Example: Continuous Sample Size Estimation for One-Arm and Two-Arm Trials Using T-test}
+Scenario: We want to estimate the sample size needed to detect a difference in means between male height and female height.
 ```{r}
-# Gender difference between heights
+t_test_sim_sample_size(alpha = 0.05, beta = 0.2, mu1 = 174, mu0 = 163,
+                       sigma1 = 6.5, sigma0 = 6,
+                       type = "two.sample",
+                       nmin = 10, nmax = 5000, sims = 10000)
+# mu1 is the expected mean height for male, and mu0 is the expected mean height for female. Sigma1 is the standard deviation of collected male height data, and sigma0 is the standard deviation of collected female height data.
 ```
 
 \section*{Conclusion}
