@@ -106,8 +106,8 @@ interim: Logical, if TRUE, perform an interim Bayesian analysis at sample size n
 ```
 
 \section*{Non-Inferiority}
-\section*{Two_Arm_Cont_Sample_Size}
-Determines the minimum sample size required for the posterior probability of a treatment effect to exceed a specified threshold, given a prior distribution and assumed effect.
+\section*{Two_Arm_Combined_Sample_Size}
+Determines the minimum sample size required for the posterior probability of a treatment effect to exceed a specified threshold, given a prior distribution and assumed effect. Supports binary, continuous, and count outcomes.
 
 prior_mean is the mean of your prior distribution for the treatment effect—basically, what you believe the average difference between the treatment and control groups is before seeing any data. It is your best guess of the treatment effect (or the difference in means) before collecting any data. prior_sd is how uncertain you are about that guess. A larger SD means more uncertainty.
 
@@ -124,16 +124,14 @@ prior_sd = 10
 
 ```
 
-\section*{Two_Arm_Cont_Post_Prob}
-Computes the posterior probability that the mean of a continuous treatment group exceeds a threshold, assuming Normal prior and likelihood.
-
-#better combine the cont and count functions together
+\section*{Two_Arm_Combined_Post_Prob}
+Computes the posterior probability that the mean of a binary, continuous or a count treatment group exceeds a threshold. For binary outcome, it assumes Beta prior and Binomial likelihood. For continuous outcome, it assums Normal prior and likelihood. For count outcome, it assumes Gamma prior and Poisson likelihood.
 ```{r}
 
 ```
 
-\section*{Two_Arm_Count_Post_Prob}
-Computes the posterior probability that the mean of a continuous treatment group exceeds a threshold, assuming Normal prior and likelihood.
+\section*{Two_Arm_Binary_Min_Prob}
+Finds the outcome pair (y1, y2) that yields the minimum posterior probability xi for a fixed difference in outcomes between treatment and control groups.
 ```{r}
 
 ```
