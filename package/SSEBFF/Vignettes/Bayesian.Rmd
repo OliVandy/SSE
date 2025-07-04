@@ -12,12 +12,14 @@ vignette: >
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
-The SSEBFF package is designed to assist in sample size estimation for clinical trials across various paradigms, including frequentist, Bayesian, and Non-inferiority. This vignette focuses on the Bayesian paradigm.
+The SSEBFF package is designed to assist in sample size estimation for clinical trials across various paradigms, including Frequentist and Bayesian. This vignette focuses on the Bayesian paradigm.
 
 \section*{Introduction}
 Sample size estimation is a critical step in the design of clinical trials. The SSEBFF package provides tools for estimating sample sizes in Bayesian clinical trial designs.
 
 In Bayesian paradigms, the sample size can be estimated using a Bayesian estimator that incorporates prior information and the desired posterior probability of success. The package allows users to specify the prior distribution, the effect size, and the desired level of statistical power.
+
+One-arm trial means we are testing a single treatment against a null hypothesis. Two-arm trial means we are comparing two treatments, like a new drug against a control treatment.
 
 The hypothesis testing framework used in Bayesian paradigms is different from frequentist approaches. In Bayesian analysis, we calculate the posterior probability of the hypothesis given the data and prior information. The posterior probability is the probability of the alternative hypothesis being true after observing the data, which is a key difference from the frequentist approach that relies on p-values.
 
@@ -38,8 +40,6 @@ c is the threshold set for posterior probability. To be more specific, it is how
 
 \section*{Post_Prob_Bayes: Posterior Probability}
 When we know the sample size, we could then use the `Post_Prob_Bayes` function to compute the posterior probability that a parameter exceeds a threshold using Bayesian updating for one-sample or two-sample scenarios. Supports binary, continuous, and count outcomes for both one-arm and two-arm tests.
-
-One-arm trial means we are testing a single treatment against a null hypothesis. Two-arm trial means we are comparing two treatments, like a new drug against a control treatment.
 
 The threshold, also referred to as margin, is the value we want to compare against, like a benchmark or a minimum effect size. For example, in a one-arm trial, it is the null hypothesis value, which is the value we want to test against, $\theta^* $. 
 
