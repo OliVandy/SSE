@@ -1,5 +1,5 @@
-\name{Two_Arm_combined_Post_Prob}
-\alias{Two_Arm_combined_Post_Prob}
+\name{Two_Arm_Combined_Post_Prob}
+\alias{Two_Arm_Combined_Post_Prob}
 \alias{Two_Arm_Binary_Min_Prob}
 \title{
   Posterior Probability and the minimum Posterior Probability for Given Difference in Binary Outcomes (Two-Arm)
@@ -9,7 +9,7 @@
   2. Min_Prob: For a given observed difference in responders, finds the worst-case (minimum) posterior probability across all valid combinations of treatment and control responses that yield that difference.
 }
 \usage{
-Two_Arm_combined_Post_Prob(type = c("binary", "continuous", "count"),
+Two_Arm_Combined_Post_Prob(type = c("binary", "continuous", "count"),
                                count_treat = NULL, count_ctrl = NULL,
                                n = NULL,
                                threshold, effect_size = NULL,
@@ -20,7 +20,7 @@ Two_Arm_combined_Post_Prob(type = c("binary", "continuous", "count"),
                                a_t = NULL, b_t = NULL,
                                a_c = NULL, b_c = NULL,
                                quant = 0.5, simulations = 10000)
-Two_Arm_combined_Post_Prob(diff, n, margin,
+Two_Arm_Combined_Post_Prob(diff, n, margin,
                         alpha1 = 0.5, beta1 = 0.5,
                         alpha2 = 0.5, beta2 = 0.5,
                         prior_weight = 0.5,
@@ -82,7 +82,7 @@ In particular, in conjunction with \code{BESS_binary()}, these functions support
 }
 \examples{
 # Binary example
-Two_Arm_combined_Post_Prob(
+Two_Arm_Combined_Post_Prob(
   type = "binary",
   count_treat = 25,
   count_ctrl = 15,
@@ -96,7 +96,7 @@ Two_Arm_combined_Post_Prob(
 )
 
 # Continuous example
-Two_Arm_combined_Post_Prob(
+Two_Arm_Combined_Post_Prob(
   type = "continuous",
   n = 50,
   threshold = 0,
@@ -108,7 +108,7 @@ Two_Arm_combined_Post_Prob(
 )
 
 # Count example
-Two_Arm_combined_Post_Prob(
+Two_Arm_Combined_Post_Prob(
   type = "count",
   count_treat = 60,
   count_ctrl = 40,
