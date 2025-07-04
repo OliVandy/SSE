@@ -118,6 +118,5 @@ Two_Arm_Combined_Post_Prob(
   a_c = 1, b_c = 1,
   quant = 0.5
 )
-}
 Two_Arm_Binary_Min_Prob(diff = 5, n = 30, margin = 0.05)
 }
