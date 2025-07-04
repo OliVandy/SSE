@@ -61,7 +61,7 @@ Two_Arm_Combined_Sample_Size = function(type = c("binary", "continuous", "count"
   }
 }
 
-Two_Arm_combined_Post_Prob = function(type = c("continuous", "count", "binary"),
+Two_Arm_Combined_Post_Prob = function(type = c("continuous", "count", "binary"),
                                          sample_size,
                                          threshold,
                                          # For continuous
