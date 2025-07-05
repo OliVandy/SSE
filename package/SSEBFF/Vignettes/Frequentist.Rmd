@@ -15,15 +15,14 @@ knitr::opts_chunk$set(echo = TRUE)
 The SSEBFF package is designed to assist in sample size estimation for clinical trials across various paradigms, including Frequentist and Bayesian. This vignette focuses on the Frequentist paradigm.
 
 \section*{Introduction}
-Sample size estimation is a critical step in the design of clinical trials. The SSEBFF package provides tools for estimating sample sizes in frequentist clinical trial designs.
+Sample size estimation is a critical step in the design of clinical trials. The SSEBFF package provides tools for estimating sample sizes in Frequentist clinical trial designs.
 
-In frequentist paradigms, sample size estimation typically involves determining the number of participants needed to achieve a specified level of statistical power, given a hypothesized effect size and significance level. The package includes functions that allow users to perform these calculations for various types of clinical trials, including those with binary and continuous outcomes.
+In Frequentist paradigms, sample size estimation typically involves determining the number of participants needed to achieve a specified level of statistical power, given a hypothesized effect size and significance level. The package includes functions that allow users to perform these calculations for various types of clinical trials, including those with binary and continuous outcomes.
 
 One-arm trial means we are testing a single treatment against a null hypothesis. Two-arm trial means we are comparing two treatments, like a new drug against a control treatment.
 
-The hypothesis testing framework used in frequentist paradigms relies on the concept of null and alternative hypotheses. In one-arm practicing, the null hypothesis typically states that the treatment has no effect $(H_0: \theta \le \theta^*)$, where $\theta^*$ is the threshold and is also depicted as $\theta_0$ or margin), while the alternative hypothesis posits that the treatment does have an effect. $(H_a: \theta > \theta^*)$ The sample size is calculated to ensure that the trial has sufficient power to detect a true effect if it exists. While in two-arm, the null hypothesis states that there is no difference between the two treatment groups $(H_0: \theta_T \le \theta_C)$, where $\theta_T$ is the treatment group parameter, and $\theta_C$ is the control group parameter), and the alternative hypothesis states that there is a difference $(H_a: \theta_T > \theta_C)$, or $(H_a: \theta_T - \theta_C > \theta^*)$).
-# We are doing a one-side test for one-arm trials, and a two-side test for two-arm trials. so less and equal to!!
-```{r setup}
+We are doing a one-sided test, which means we are only interested in detecting an effect in one direction (e.g., the new treatment is better than the control). The hypothesis testing framework used in frequentist paradigms relies on the concept of null and alternative hypotheses. In one-arm practicing, the null hypothesis typically states that the treatment has no effect $(H_0: \theta \le \theta^*)$, where $\theta^*$ is the threshold and is also depicted as $\theta_0$ or margin), while the alternative hypothesis posits that the treatment does have an effect. $(H_a: \theta > \theta^*)$ The sample size is calculated to ensure that the trial has sufficient power to detect a true effect if it exists. While in two-arm, the null hypothesis states that there is no difference between the two treatment groups $(H_0: \theta_T \le \theta_C)$, where $\theta_T$ is the treatment group parameter, and $\theta_C$ is the control group parameter), and the alternative hypothesis states that there is a difference $(H_a: \theta_T > \theta_C)$, or $(H_a: \theta_T - \theta_C > \theta^*)$).
+```{r load-packages, include = FALSE}
 library(SSEBFF)
 ```
 We will demonstrate the package function through example simulations. In this package we provide a combined function for sample size estimation for both one-arm and two-arm trials, which can be used to estimate the sample size needed to achieve a specified power and significance level.
@@ -45,6 +44,25 @@ t_test_sim_sample_size(alpha = 0.05, beta = 0.2, mu1 = 174, mu0 = 163,
                        type = "two.sample",
                        nmin = 10, nmax = 5000, sims = 10000)
 # mu1 is the expected mean height for male, and mu0 is the expected mean height for female. Sigma1 is the standard deviation of collected male height data, and sigma0 is the standard deviation of collected female height data.
+```
+
+\section*{Freq_Count_Combined}
+This function is designed to estimate the sample size needed for a one-arm or two-arm trial with count data. This function can be used to determine the required sample size based on the expected event rates and the desired power and significance level.
+
+For example, we are comparing shot success between two basketball players. Player A hits 12 shots/game on average, and Player B hits 8 shots/game. We want to know: how many games should you record to be 95% sure that Player A’s scoring rate is really higher than Player B’s — and not just random luck? 
+```{r}
+Freq_Count_Combined(
+  alpha = 0.05,
+  beta = 0.1,
+  mu1 = 12,    # Player A's shot rate
+  mu0 = 8,     # Player B's shot rate
+  sig1 = 2,    # Standard deviation of Player A's shot rate
+  sig0 = 1.5,  # Standard deviation of Player B's shot rate
+  type = "two.sample",
+  nmin = 5,
+  nmax = 300,
+  sims = 10000
+)
 ```
 
 \section*{Conclusion}
