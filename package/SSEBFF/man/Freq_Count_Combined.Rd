@@ -8,7 +8,7 @@ Performs both theoretical and simulation-based sample size estimation for detect
 }
 \usage{
 Freq_Count_Combined(alpha, beta, mu1, mu0, 
-                    theta1 = 1, theta0 = 1, 
+                    sig1 = 1, sig0 = 1, 
                     type = "two.sample", 
                     nmin = 10, nmax = 5000, sims = 10000)
 }
@@ -17,8 +17,8 @@ Freq_Count_Combined(alpha, beta, mu1, mu0,
   \item{beta}{Type II error rate (1 - power), typically 0.2.}
   \item{mu1}{Expected mean count under the alternative hypothesis.}
   \item{mu0}{Mean count under the null hypothesis.}
-  \item{theta1}{Dispersion parameter for alternative (mean = mu1, variance = mu1 + mu1^2 / theta1). Default is 1 (Poisson).}
-  \item{theta0}{Dispersion parameter for null (mean = mu0, variance = mu0 + mu0^2 / theta0). Default is 1 (Poisson).}
+  \item{sig1}{Dispersion parameter for alternative (mean = mu1, variance = mu1 + mu1^2 / sig1). Default is 1 (Poisson).}
+  \item{sig0}{Dispersion parameter for null (mean = mu0, variance = mu0 + mu0^2 / sig0). Default is 1 (Poisson).}
   \item{type}{Type of test: "one.sample" or "two.sample". Default is "two.sample".}
   \item{nmin}{Minimum sample size to consider during simulation.}
   \item{nmax}{Maximum sample size to consider during simulation.}
@@ -56,14 +56,14 @@ A list with the following elements:
 \examples{
 Freq_Count_Combined(alpha = 0.05, beta = 0.2, 
                     mu1 = 7, mu0 = 5,
-                    theta1 = 1, theta0 = 1,
+                    sig1 = 1, sig0 = 1,
                     type = "two.sample",
                     nmin = 10, nmax = 1000, sims = 5000)
 
 # One-sample test, overdispersed counts
 Freq_Count_Combined(alpha = 0.05, beta = 0.1,
                     mu1 = 12, mu0 = 10,
-                    theta1 = 0.5, theta0 = 0.5,
+                    sig1 = 0.5, sig0 = 0.5,
                     type = "one.sample",
                     nmin = 5, nmax = 300, sims = 10000)
 }
