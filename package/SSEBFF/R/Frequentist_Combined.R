@@ -81,7 +81,7 @@ t_test_sim_sample_size = function(alpha, beta, mu1, mu0,
 }
 
 Freq_Count_Combined = function(alpha, beta, mu1, mu0, 
-                               theta1 = 1, theta0 = 1, # dispersion parameter for gamma-poisson
+                               sig1 = 1, sig0 = 1, # dispersion parameter for gamma-poisson
                                type = "two.sample", 
                                nmin = 10, nmax = 5000, sims = 10000) {
   # t-test theoretical calculation (normal approximation)
@@ -105,9 +105,9 @@ Freq_Count_Combined = function(alpha, beta, mu1, mu0,
     if (type == "one.sample") {
       # Null: mu = mu0; Alt: mu = mu1
       # Negative binomial: variance = mu + mu^2 / theta
-      size0 = theta0
+      size0 = sig0
       prob0 = size0 / (size0 + mu0)
-      size1 = theta1
+      size1 = sig1
       prob1 = size1 / (size1 + mu1)
       
       # Null: type I error
@@ -126,9 +126,9 @@ Freq_Count_Combined = function(alpha, beta, mu1, mu0,
       type2_error = mean(t_alt < t_alpha)
       
     } else if (type == "two.sample") {
-      size0 = theta0
+      size0 = sig0
       prob0 = size0 / (size0 + mu0)
-      size1 = theta1
+      size1 = sig1
       prob1 = size1 / (size1 + mu1)
       
       # Null
