@@ -2,7 +2,7 @@
 \alias{Post_Prob_Bayes}
 \title{Posterior Probability Calculation for One- and Two-Sample Bayesian Settings}
 \description{
-Computes the posterior probability that a parameter exceeds a threshold using Bayesian updating for one-sample or two-sample scenarios. Supports binary, continuous, and count outcomes for one-sample tests.
+Computes the posterior probability that a parameter exceeds a threshold using Bayesian updating for one-sample or two-sample scenarios. Supports binary and continuous outcomes for one and two-arm tests.
 }
 \usage{
 Post_Prob_Bayes(type = "one.sample", 
@@ -18,7 +18,7 @@ Post_Prob_Bayes(type = "one.sample",
   \item{n}{Sample size per group or total sample size (one-sample).}
   \item{theta0}{Threshold for posterior probability comparison. Required for \code{one.sample}.}
   \item{delta}{Margin threshold for two-sample difference. Required for \code{two.sample}.}
-  \item{outcome}{Outcome type for one-sample: 1 = binary, 2 = continuous, 3 = count.}
+  \item{outcome}{Outcome type: 1 = binary, 2 = continuous.}
   \item{e}{Evidence level; proportion of observed successes or mean response.}
   \item{a, b}{Prior hyperparameters for one-sample case.}
   \item{sig}{Standard deviation (for continuous one-sample outcomes).}
@@ -28,14 +28,9 @@ Post_Prob_Bayes(type = "one.sample",
   \item{sim}{Number of simulations to use in the two-sample posterior estimation.}
 }
 \details{
-For \code{one.sample}:
 \itemize{
   \item Binary: uses Beta posterior.
   \item Continuous: uses Normal posterior.
-  \item Count: uses Gamma posterior.
-}
-For \code{two.sample}:
-\itemize{
   \item Posterior probabilities for difference in success rates are estimated using simulation from Beta posteriors.
 }
 An optional adjustment based on \code{q} is applied to the raw posterior using a quasi-decision-theoretic rule.
