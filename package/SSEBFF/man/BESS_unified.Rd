@@ -44,6 +44,8 @@ A list containing:
   \item{\code{n_seq}}{Sequence of evaluated sample sizes.}
   \item{\code{m_vec}}{Observed successes (one-sample binary/count only).}
   \item{\code{yd}}{Count of expected treatment-control effect difference.}
+  \item{\code{yd_vec}{(Two-arm binary only) Vector of event allocations evaluated at each sample size.}
+  \item{\code{y1_vec, y2_vec}{(Two-arm binary only) Event allocations in treatment and control arms that achieve the minimum posterior probability above the threshold.}
 }
 }
 \references{
