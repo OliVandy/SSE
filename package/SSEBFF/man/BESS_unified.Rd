@@ -2,7 +2,7 @@
 \alias{BESS_unified}
 \title{Bayesian Estimator of Sample Size (BESS) for One- and Two-Sample Designs}
 \description{
-Estimates the minimum required sample size to achieve a desired posterior probability threshold \code{c} based on Bayesian inference, supporting binary, continuous, and count outcomes for one-sample designs, and binary outcomes for two-sample designs. This is based on controlling the posterior probability \code{xi} to exceed a cutoff value \code{c} when the observed treatment effect exceeds a certain proportion \code{e}.
+Estimates the minimum required sample size to achieve a desired posterior probability threshold \code{c} based on Bayesian inference, supporting binary and continuous for one-sample designs, and binary outcomes for two-sample designs. This is based on controlling the posterior probability \code{xi} to exceed a cutoff value \code{c} when the observed treatment effect exceeds a certain proportion \code{e}.
 }
 \usage{
 BESS_unified(theta0, c, e, type = "one.sample", 
@@ -22,7 +22,7 @@ BESS_unified(theta0, c, e, type = "one.sample",
   One-sample design: represents the expected true value of the outcome (e.g., response rate, average outcome, or event rate) under the assumed alternative scenario.
   Two-sample design: represents the expected effect size between treatment and control (e.g., \code{e = p_t - p_c} for binary outcomes). It is used to generate simulated trial outcomes.}
   \item{type}{\code{"one.sample"} or \code{"two.sample"}.}
-  \item{outcome}{Type of one-sample outcome: 1 = binary, 2 = continuous, 3 = count. Required for \code{type = "one.sample"}.}
+  \item{outcome}{Type of one-sample outcome: 1 = binary, 2 = continuous. Required for \code{type = "one.sample"}.}
   \item{a, b}{Beta/Gamma/Normal prior parameters for the one-sample case.}
   \item{sig}{Standard deviation for continuous outcomes.}
   \item{a1, b1, a2, b2}{Prior Beta parameters for treatment and control arms in the two-sample case.}
@@ -44,7 +44,6 @@ A list containing:
   \item{\code{n_seq}}{Sequence of evaluated sample sizes.}
   \item{\code{m_vec}}{Observed successes (one-sample binary/count only).}
   \item{\code{yd}}{Count of expected treatment-control effect difference.}
-  \item{\code{y1_vec}, \code{y2_vec}}{Values of simulated success counts per arm in the two-sample case.}
 }
 }
 \references{
