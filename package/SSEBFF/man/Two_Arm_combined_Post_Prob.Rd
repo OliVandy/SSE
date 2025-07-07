@@ -1,12 +1,10 @@
 \name{Two_Arm_Combined_Post_Prob}
 \alias{Two_Arm_Combined_Post_Prob}
-\alias{Two_Arm_Binary_Min_Prob}
 \title{
   Posterior Probability and the minimum Posterior Probability for Given Difference in Binary Outcomes (Two-Arm)
 }
 \description{
-  1. Combined_Post_Prob: Computes the posterior probability that the treatment effect exceeds a defined threshold in two-arm Bayesian trials. Supports binary, continuous, and count data types using conjugate priors and optional quantile adjustment.\cr
-  2. Min_Prob: For a given observed difference in responders, finds the worst-case (minimum) posterior probability across all valid combinations of treatment and control responses that yield that difference.
+  Combined_Post_Prob: Computes the posterior probability that the treatment effect exceeds a defined threshold in two-arm Bayesian trials. Supports binary, continuous, and count data types using conjugate priors and optional quantile adjustment.
 }
 \usage{
 Two_Arm_Combined_Post_Prob(type = c("binary", "continuous", "count"),
@@ -20,11 +18,6 @@ Two_Arm_Combined_Post_Prob(type = c("binary", "continuous", "count"),
                                a_t = NULL, b_t = NULL,
                                a_c = NULL, b_c = NULL,
                                quant = 0.5, simulations = 10000)
-Two_Arm_Combined_Post_Prob(diff, n, margin,
-                        alpha1 = 0.5, beta1 = 0.5,
-                        alpha2 = 0.5, beta2 = 0.5,
-                        prior_weight = 0.5,
-                        iterations = 10000)
 }
 \arguments{
   \item{type}{Character. Outcome type. Must be one of \code{"binary"}, \code{"continuous"}, or \code{"count"}.}
@@ -42,12 +35,6 @@ Two_Arm_Combined_Post_Prob(diff, n, margin,
   \item{a_c, b_c}{Numerics. Shape and rate of Gamma prior for control group (count outcomes).}
   \item{quant}{Numeric. Posterior quantile correction factor. Default is 0.5 (no correction).}
   \item{simulations}{Integer. Number of samples drawn for posterior estimation in binary and count outcomes. Default is 10,000.}
-  \item{obs_t}{Observed number of responders in the treatment group.}
-  \item{obs_c}{Observed number of responders in the control group.}
-  \item{margin}{Superiority (margin > 0) or non-inferiority (margin < 0) threshold.}
-  \item{prior_weight}{Weighting for the posterior adjustment (default 0.5 = no adjustment).}
-  \item{iterations}{Number of samples to draw from the posterior distributions.}
-  \item{diff}{Observed difference in responder counts: tr - ct.}
 }
 \details{
 These functions calculate the posterior probability that the difference in response rates between treatment and control groups exceeds a user-defined margin. The calculation uses Beta priors for the true proportions and simulates from the posterior distributions via the Beta-Binomial conjugate model.
@@ -59,11 +46,7 @@ These functions are building blocks for sample size calculations, decision-theor
 In particular, in conjunction with \code{BESS_binary()}, these functions support robust sample size planning under uncertainty and variation in observed outcomes.
 }
 \value{
-  1. Post Prob: Posterior probability (possibly adjusted) that \code{p_t - p_c > margin}.\cr
-  2. Min Prob: A list with:\cr
-  \item{tr}{Treatment responder count (worst-case).}
-  \item{ct}{Control responder count (worst-case).}
-  \item{min_prob}{Minimum posterior probability observed for the given difference.}
+  Posterior probability (possibly adjusted) that \code{p_t - p_c > margin}.\cr
 }
 \references{
 %% ~put references to the literature/web site here ~
@@ -116,7 +99,5 @@ Two_Arm_Combined_Post_Prob(
   threshold = 0,
   a_t = 1, b_t = 1,
   a_c = 1, b_c = 1,
-  quant = 0.5
-)
-Two_Arm_Binary_Min_Prob(diff = 5, n = 30, margin = 0.05)
+  quant = 0.5)
 }
