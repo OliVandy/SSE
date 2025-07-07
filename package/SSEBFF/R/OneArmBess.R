@@ -113,3 +113,31 @@ One_Arm_Normal_Sample_Size = function(threshold, crit, effect_size, prior_mean, 
   final_n = n_vals[which(prob_vals >= crit)[1]]
   return(list(n = final_n, prob = prob_vals[which(prob_vals >= crit)[1]], prob_h1_vec = prob_vals))
 }
+
+One_Arm_Count_Post_Prob = function(count, n, threshold, a = 0.5, b = 0.5, quant = 0.5, simulations = 1e4) {
+  # Posterior: shape = a + count, rate = b + n
+  post_samples <- rgamma(simulations, shape = a + count, rate = b + n)
+  post_prob <- mean(post_samples > threshold)
+  if (quant == 0.5) {
+    return(post_prob)
+  } else {
+    adjust <- (2 * quant - 1) * post_prob
+    return((quant * post_prob) / (1 - quant + adjust))
+  }
+}
+
+One_Arm_Count_Sample_Size = function(threshold, crit, effect_size, a = 0.5, b = 0.5,
+                                      min_n = 5, max_n = 100, quant = 0.5, simulations = 1e4) {
+  for (n in seq(min_n, max_n)) {
+    count <- floor(n * effect_size)
+    prob <- One_Arm_Count_Post_Prob(count, n, threshold, a, b, quant, simulations)
+    if (prob >= crit) {
+      return(list(
+        n = n,
+        count = count,
+        prob = prob
+      ))
+    }
+  }
+  return("Criteria not met - increase max_n")
+}
