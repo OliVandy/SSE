@@ -85,13 +85,11 @@ The Gamma-Poisson model is a Bayesian approach for analyzing count data, particu
 \section*{Count_Sample_Size}
 Computes the minimum sample size needed to achieve a posterior probability of superiority greater than or equal to a critical threshold, under a Gamma-Poisson model for count outcomes.
 
-Say we want to estimate the sample size needed to check if the average number of success shots made by a basketball Player A is greater than Player B by at least 1 event. We assume that the average shots/game for Player A is 5 and the average shots/game for Player B is 3. We want to be at least 90% sure (crit = 0.9) that our sample size is sufficient to detect this difference. In this case, we can use the `Count_Sample_Size` function to compute the sample size.
+Say we want to estimate the sample size needed to check if the average number of success shots made by a basketball Player A is greater than Player B by at least 1 event. We assume that the average shots/game for Player A is 12 and the average shots/game for Player B is 8. We want to be at least 90% sure (crit = 0.9) that our sample size is sufficient to detect this difference. In this case, we can use the `Count_Sample_Size` function to compute the sample size.
 ```{r}
 Count_Sample_Size(type = "two.sample",
                   threshold = 1, # We assume A is 1 shot/game better than B
-                  crit = 0.9,
-                  effect_size = 0.25, # The cutoff to declare effectiveness
-                  a_t = 0.5, b_t = 0.5, a_c = 0.5, b_c = 0.5)
+                  crit = 0.9, effect_size = 2, a_t = 0.5, b_t = 0.5, a_c = 0.5, b_c = 0.5)
 ```
 
 \section*{Count_Post_Prob}
@@ -102,7 +100,7 @@ FOr example, you are monitoring the rate of hospital-acquired infections per 10 
 Count_Post_Prob(type = "one.sample", total_count = 45, sample_size = 20,
                 threshold = 2.5, a_t = 0.5, b_t = 0.5)
 ```
-We’re 98.7% sure the true infection rate exceeds 2.5 — we’ve got a serious problem, time to report this to QA.
+We’re 19.59% sure the true infection rate exceeds 2.5 — it's not a serious problem.
 
 \section*{Two_Arm_Standard_SSE_Design}
 Simulates a two‑arm clinical trial with binary outcomes.  
@@ -124,6 +122,7 @@ Two_Arm_Standard_SSE_Design(
   interim = TRUE,
   n_0     = 50)
 ```
+In this case, the posterior probability of success is 0.74, which is less than the threshold of 0.975, so we stop early for futility. The decision indicator is 0, and number of subjects use is still 50.
 
 \section*{Non-Inferiority}
 \section*{Two_Arm_Combined_Sample_Size}
@@ -140,14 +139,32 @@ prior_mean = 0
 prior_sd = 10
 
 \item{crit} is the cutoff value mentioned earlier, which is the threshold for the posterior probability of success. It is the value you want to compare against, like a benchmark or a minimum effect size. For example, if you want to be at least 90% sure that the treatment is better than the control, you would set crit = 0.9.
-```{r}
 
+For example, a company wants to introduce a new productivity software and measure if it improves the average number of tasks completed per day by employees compared to the current tool. The outcome (number of tasks per day) is continuous. To determine the minimum number of employees needed in each group (new software vs. current software) to be at least 90% sure (posterior probability ≥ 0.9) that the new tool improves productivity by at least 0.2 tasks per day, assuming the expected improvement is 0.4 tasks.
+```{r}
+Two_Arm_Combined_Sample_Size(
+  type = "continuous",
+  threshold = 0.2,
+  crit = 0.9,
+  effect_size = 0.4,
+  prior_mean = 0,
+  prior_sd = 1,
+  sigma = 1)
 ```
 
 \section*{Two_Arm_Combined_Post_Prob}
 Computes the posterior probability that the mean of a binary, continuous or a count treatment group exceeds a threshold. For binary outcome, it assumes Beta prior and Binomial likelihood. For continuous outcome, it assums Normal prior and likelihood. For count outcome, it assumes Gamma prior and Poisson likelihood.
 ```{r}
-
+Two_Arm_Combined_Post_Prob(
+  type = "continuous",
+  sample_size = 50,
+  threshold = 0,
+  effect_size = 0.3,
+  prior_mean = 0,
+  prior_sd = 1,
+  sigma = 1,
+  quant = 0.5
+)
 ```
 
 \section*{Conclusion}
