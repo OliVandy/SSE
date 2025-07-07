@@ -124,7 +124,7 @@ Two_Arm_BESS_SSR_Design = function(theta_H, theta_L, theta_s, c, c_s, n0, a1 = 0
     e_s <- post_mean_theta_L - post_mean_theta_H
     
     # BESS additional sample size
-    ss_result <- Two_Arm_BESS_Binary(-theta_s, c, e_s, n_min, n_max, a1 = a1_ip, b1 = b1_ip, a2 = a2_ip, b2 = b2_ip, q = q)
+    ss_result <- Two_Arm_BESS_Binary(theta_s, c, e_s, n_min, n_max, a1 = a1_ip, b1 = b1_ip, a2 = a2_ip, b2 = b2_ip, q = q)
     n_s <- ss_result$n
     
     if(cap == T){
