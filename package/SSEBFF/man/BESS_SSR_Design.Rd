@@ -58,16 +58,30 @@ BESS_SSR_Design = function(type = "two.sample",
 }
 \value{
   A list containing:
-  \item{y_H_n0, y_L_n0}{Simulated data for initial sample (two-arm)}
-  \item{y_n0}{Simulated data for initial sample (one-arm)}
-  \item{pH1_int}{Posterior probability at interim}
-  \item{bess_int_dec}{Decision at interim (1 = success, 0 = futility, 2 = continue)}
-  \item{n_s}{Sample size added if continuing}
-  \item{e_s}{Posterior predictive effect size used for re-estimation}
-  \item{y_H_ns, y_L_ns}{Simulated additional data (two-arm)}
-  \item{y_ns}{Simulated additional data (one-arm)}
-  \item{pH1_s}{Posterior probability after additional data}
-  \item{bess_fin_dec}{Final decision (1 = success, 0 = futility)}
+  \item{For one-sample:}{
+    \describe{
+      \item{y_n0}{Observed interim data}
+      \item{pH1_int}{Posterior probability at interim}
+      \item{bess_int_dec}{Interim decision: 1 = stop for success, 0 = stop for futility, 2 = continue}
+      \item{y_ns}{Simulated additional data (if continued)}
+      \item{e_s}{Posterior mean after interim}
+      \item{n_s}{Re-estimated additional sample size}
+      \item{pH1_s}{Posterior probability at final}
+      \item{bess_fin_dec}{Final decision: 1 = success, 0 = futility}
+    }
+  }
+  \item{For two-sample:}{
+    \describe{
+      \item{y_H_n0, y_L_n0}{Observed interim data for experimental/control groups}
+      \item{pH1_int}{Posterior probability at interim}
+      \item{bess_int_dec}{Interim decision: 1 = stop for success, 0 = stop for futility, 2 = continue}
+      \item{y_H_ns, y_L_ns}{Simulated additional data (if continued)}
+      \item{e_s}{Posterior mean difference after interim}
+      \item{n_s}{Re-estimated additional sample size}
+      \item{pH1_s}{Posterior probability at final}
+      \item{bess_fin_dec}{Final decision: 1 = success, 0 = futility}
+    }
+  }
 }
 \references{
 %% ~put references to the literature/web site here ~
