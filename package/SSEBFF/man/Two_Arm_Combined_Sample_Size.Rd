@@ -7,7 +7,7 @@
   Computes the minimum required sample size per arm in a two-arm Bayesian trial design to ensure the posterior probability that the treatment effect exceeds a threshold is at least a specified critical value. This function supports \code{"binary"}, \code{"continuous"}, and \code{"count"} outcomes.
 }
 \usage{
-Two_Arm_Bayes_Sample_Size_Combo(type = c("binary", "continuous", "count"),
+Two_Arm_Combined_Sample_Size(type = c("binary", "continuous", "count"),
                                  threshold, crit, effect_size,
                                  prior_mean = NULL, prior_sd = NULL, sigma = 1,
                                  a_t = NULL, b_t = NULL, a_c = NULL, b_c = NULL,
@@ -66,33 +66,30 @@ Two_Arm_Bayes_Sample_Size_Combo(type = c("binary", "continuous", "count"),
 }
 \examples{
 # Binary outcome example
-Two_Arm_Bayes_Sample_Size_Combo(
+Two_Arm_Combined_Sample_Size(
   type = "binary",
   threshold = 0,
   crit = 0.8,
-  effect_size = 0.15
-)
+  effect_size = 0.15)
 
 # Continuous outcome example
-Two_Arm_Bayes_Sample_Size_Combo(
+Two_Arm_Combined_Sample_Size(
   type = "continuous",
   threshold = 0.2,
   crit = 0.9,
   effect_size = 0.4,
   prior_mean = 0,
   prior_sd = 1,
-  sigma = 1
-)
+  sigma = 1)
 
 # Count outcome example
-Two_Arm_Bayes_Sample_Size_Combo(
+Two_Arm_Combined_Sample_Size(
   type = "count",
   threshold = 0,
   crit = 0.85,
   effect_size = 0.2,
   a_t = 1, b_t = 1,
-  a_c = 1, b_c = 1
-)
+  a_c = 1, b_c = 1)
 }
 
 \seealso{
