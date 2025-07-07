@@ -29,7 +29,13 @@ Two_Arm_Standard_SSE_Design(
   \item{c_s}{Posterior‑probability threshold for early futility at interim.}
 }
 \value{
-A numeric vector of length 4:  
+  A numeric vector with the following elements:
+  \describe{
+    \item{mean_H}{Observed mean success rate in the experimental group.}
+    \item{mean_L}{Observed mean success rate in the control group.}
+    \item{decision}{Decision indicator: 1 = success (superiority), 0 = not superior.}
+    \item{n_total}{Number of subjects used (may be \code{n_0} if stopped early, otherwise \code{n_f}).}
+  } 
 }
 \details{
 %%  ~~ If necessary, more details than the description above ~~
