@@ -19,30 +19,26 @@ Post_Prob_Bayes = function(type = "one.sample",
   
   # === ONE SAMPLE POSTERIOR ===
   if (type == "one.sample") {
-    if (is.null(outcome) || !(outcome %in% c(1,2,3))) {
-      stop("Please enter a valid outcome type: 1 = binary, 2 = continuous, 3 = count.")
-    }
-    if (is.null(e) || e < 0 || e > 1) {
-      stop("Please enter an evidence level 'e' between 0 and 1.")
+    if (is.null(outcome) || !(outcome %in% c(1, 2))) {
+      stop("Please enter a valid outcome type: 1 = binary, 2 = continuous.")
     }
     if (is.null(theta0)) stop("theta0 is required for one.sample.")
     
     prob <- switch(as.character(outcome),
                    "1" = {
+                     if (is.null(e) || e < 0 || e > 1) {
+                       stop("Please enter an evidence level 'e' between 0 and 1 for binary outcome.")
+                     }
                      post_a <- a + floor(e * n)
                      post_b <- b + n - floor(e * n)
                      pbeta(theta0, post_a, post_b, lower.tail = FALSE)
                    },
                    "2" = {
+                     if (is.null(e)) stop("Please provide effect size 'e' for continuous outcome.")
                      post_sig2 <- 1 / (1 / (b^2) + n / (sig^2))
                      post_mu <- post_sig2 * ((a / (b^2)) + ((n * e) / (sig^2)))
                      z_val <- (theta0 - post_mu) / sqrt(post_sig2)
                      pnorm(z_val, lower.tail = FALSE)
-                   },
-                   "3" = {
-                     post_a <- a + floor(e * n)
-                     post_b <- b + n
-                     pgamma(theta0, post_a, rate = post_b, lower.tail = FALSE)
                    })
   }
   
@@ -51,12 +47,15 @@ Post_Prob_Bayes = function(type = "one.sample",
     if (is.null(Y_t) || is.null(Y_c) || is.null(delta)) {
       stop("For type = 'two.sample', you must provide Y_t, Y_c, and delta.")
     }
-    if (is.null(outcome) || !(outcome %in% c(1,2,3))) {
-      stop("Please enter a valid outcome type: 1 = binary, 2 = continuous, 3 = count.")
+    if (is.null(outcome) || !(outcome %in% c(1, 2))) {
+      stop("Please enter a valid outcome type: 1 = binary, 2 = continuous.")
     }
     
     prob <- switch(as.character(outcome),
                    "1" = {
+                     if (is.null(e) || e < 0 || e > 1) {
+                       stop("Please enter an evidence level 'e' between 0 and 1 for binary outcome.")
+                     }
                      pt_post <- rbeta(sim, a1 + Y_t, b1 + n - Y_t)
                      pc_post <- rbeta(sim, a2 + Y_c, b2 + n - Y_c)
                      pd_post <- pt_post - pc_post
@@ -70,12 +69,6 @@ Post_Prob_Bayes = function(type = "one.sample",
                      mu_c <- (a1 / (b1^2) + Y_c / sig2_c) / (1 / (b1^2) + 1 / sig2_c)
                      diff_post <- rnorm(sim, mean = mu_t - mu_c, sd = sqrt(post_var))
                      mean(diff_post > delta)
-                   },
-                   "3" = {
-                     pt_post <- rgamma(sim, shape = a2 + Y_t, rate = b2 + n)
-                     pc_post <- rgamma(sim, shape = a1 + Y_c, rate = b1 + n)
-                     pd_post <- pt_post - pc_post
-                     mean(pd_post > delta)
                    })
   }
   
@@ -89,63 +82,103 @@ Post_Prob_Bayes = function(type = "one.sample",
 }
 
 BESS_unified = function(theta0, c, e, type = "one.sample", 
-                         outcome = NULL, a = NULL, b = NULL, sig = 1,
-                         a1 = NULL, b1 = NULL, a2 = NULL, b2 = NULL,
-                         q = 0.5, sim = 10000, n_min = 5, n_max = 100) {
+                        outcome = NULL, a = NULL, b = NULL, sig = 1,
+                        a1 = NULL, b1 = NULL, a2 = NULL, b2 = NULL,
+                        q = 0.5, sim = 10000, n_min = 5, n_max = 100) {
   
-  # Checks
-  if (!(type %in% c("one.sample", "two.sample"))) stop("Type must be 'one.sample' or 'two.sample'")
-  if (type == "one.sample" && is.null(outcome)) stop("Please specify outcome type for one.sample (1, 2, or 3)")
-  
-  n_seq = seq(n_min, n_max)
+  if (!(type %in% c("one.sample", "two.sample"))) stop("Type must be 'one.sample' or 'two.sample'.")
   
   if (type == "one.sample") {
-    s_vec = rep(NA, length(n_seq))
-    m_vec = if (outcome %in% c(1,3)) rep(NA, length(n_seq)) else NULL
+    if (is.null(outcome)) stop("Please specify outcome type for one.sample (1 = binary, 2 = continuous).")
+    if (!(outcome %in% c(1, 2))) stop("Only outcome = 1 (binary) and outcome = 2 (continuous) are supported.")
     
-    for (i in seq_along(n_seq)) {
-      n = n_seq[i]
-      s_vec[i] <- One_Arm_Post_Prob_H1(n, theta0, e, outcome, a, b, sig = sig, q = q)
-      if (!is.null(m_vec)) m_vec[i] <- floor(n * e)
+    if (outcome == 1) {
+      result <- One_Arm_BESS(theta0 = theta0, c = c, e = e,
+                             outcome = 1, a = a, b = b,
+                             q = q, sig = sig, n_min = n_min, n_max = n_max)
+    } else if (outcome == 2) {
+      result <- One_Arm_Normal_Sample_Size(threshold = theta0, crit = c, 
+                                           effect_size = e, prior_mean = a, prior_sd = b,
+                                           min_n = n_min, max_n = n_max,
+                                           quant = q, sigma = sig)
     }
     
-    if (s_vec[1] >= c) return("Can lower n_min.")
-    if (tail(s_vec, 1) < c) return("Need to increase max sample size!")
-    
-    n_result <- n_seq[which(s_vec >= c)[1]]
-    return(list(n = n_result, n_seq = n_seq, vec = s_vec, m_vec = m_vec))
+    return(result)
   }
   
+  # === TWO SAMPLE ===
   if (type == "two.sample") {
-    xi_list <- yd_n_list <- y1_list <- y2_list <- c()
-    ss = yd_n <- NA
+    if (is.null(outcome)) stop("Please specify outcome type for two.sample (1 = binary, 2 = continuous).")
+    if (!(outcome %in% c(1, 2))) stop("Only outcome = 1 (binary) and outcome = 2 (continuous) are supported.")
     
-    yd_v_max = floor(e * n_max)
-    min_xi_max = Two_Arm_Find_Min_Xi(yd_v_max, n_max, theta0, a1, b1, a2, b2, q, sim)
-    if (min_xi_max$min_xi < c) {
-      return(list(n = n_max, yd = yd_v_max, n_seq = n_seq, vec = xi_list, yd_vec = yd_n_list, y1_vec = y1_list, y2_vec = y2_list))
-    }
+    n_seq <- seq(n_min, n_max)
     
-    for (n in n_seq) {
-      yd_v = floor(e * n)
-      min_xi = Two_Arm_Find_Min_Xi(yd_v, n, theta0, a1, b1, a2, b2, q, sim)
-      if (is.na(ss) && min_xi$min_xi >= c) {
-        ss = n
-        yd_n = yd_v
-        break
+    if (outcome == 1) {
+      # === Two-Arm Binary Sample Size ===
+      xi_list <- yd_n_list <- y1_list <- y2_list <- c()
+      ss <- yd_n <- NA
+      
+      yd_v_max <- floor(e * n_max)
+      min_xi_max <- Two_Arm_Find_Min_Xi(yd_v_max, n_max, theta0, a1, b1, a2, b2, q, sim)
+      
+      if (min_xi_max$min_xi < c) {
+        ss <- n_max
+        yd_n <- yd_v_max
+        return(list(n = ss, yd = yd_n, n_seq = n_seq, vec = xi_list, yd_vec = yd_n_list, y1_vec = y1_list, y2_vec = y2_list))
       }
-      xi_list = c(xi_list, min_xi$min_xi)
-      yd_n_list = c(yd_n_list, yd_v)
-      y1_list = c(y1_list, min_xi$y1)
-      y2_list = c(y2_list, min_xi$y2)
+      
+      for (n in n_seq) {
+        yd_v <- floor(e * n)
+        min_xi <- Two_Arm_Find_Min_Xi(yd_v, n, theta0, a1, b1, a2, b2, q, sim)
+        
+        if (min_xi$min_xi >= c && is.na(ss)) {
+          ss <- n
+          yd_n <- yd_v
+          break
+        }
+        xi_list <- c(xi_list, min_xi$min_xi)
+        yd_n_list <- c(yd_n_list, yd_v)
+        y1_list <- c(y1_list, min_xi$y1)
+        y2_list <- c(y2_list, min_xi$y2)
+      }
+      
+      if (is.na(ss)) {
+        ss <- n_max
+        yd_n <- floor(e * ss)
+      }
+      
+      return(list(n = ss, yd = yd_n, n_seq = n_seq, vec = xi_list,
+                  yd_vec = yd_n_list, y1_vec = y1_list, y2_vec = y2_list))
     }
     
-    if (is.na(ss)) {
-      ss = n_max
-      yd_n = floor(e * ss)
+    if (outcome == 2) {
+      # === Two-Arm Continuous Sample Size (via simulation) ===
+      prob_vec <- rep(NA, length(n_seq))
+      
+      for (i in seq_along(n_seq)) {
+        n <- n_seq[i]
+        sig2_t <- sig^2 / n
+        sig2_c <- sig^2 / n
+        
+        post_var <- 1 / (1 / (b1^2) + 1 / sig2_c) + 1 / (1 / (b2^2) + 1 / sig2_t)
+        mu_t <- (a2 / (b2^2) + e / sig2_t) / (1 / (b2^2) + 1 / sig2_t)
+        mu_c <- (a1 / (b1^2) + 0 / sig2_c) / (1 / (b1^2) + 1 / sig2_c)
+        
+        diff_post <- rnorm(sim, mean = mu_t - mu_c, sd = sqrt(post_var))
+        prob_vec[i] <- ifelse(q == 0.5, mean(diff_post > theta0),
+                              {
+                                raw <- mean(diff_post > theta0)
+                                A2Pm1 <- (2 * q - 1) * raw
+                                (q * raw) / (1 - q + A2Pm1)
+                              })
+      }
+      
+      if (prob_vec[1] >= c) return("Can lower n_min.")
+      if (tail(prob_vec, 1) < c) return("Need to increase max sample size!")
+      
+      n_result <- n_seq[which(prob_vec >= c)[1]]
+      return(list(n = n_result, n_seq = n_seq, vec = prob_vec))
     }
-    
-    return(list(n = ss, yd = yd_n, n_seq = n_seq, vec = xi_list, yd_vec = yd_n_list, y1_vec = y1_list, y2_vec = y2_list))
   }
 }
 
@@ -295,5 +328,127 @@ BESS_SSR_Design = function(type = "two.sample",
       y_H_ns = y_H_s, y_L_ns = y_L_s, e_s = e_s, n_s = n_s,
       pH1_s = pH1_s, bess_fin_dec = bess_dec
     ))
+  }
+}
+
+Count_Post_Prob = function(type = "one.sample",
+                           threshold,
+                           sample_size,
+                           count_treat = NULL,
+                           count_ctrl = NULL,
+                           total_count = NULL,
+                           a_t = 0.5, b_t = 0.5,
+                           a_c = 0.5, b_c = 0.5,
+                           quant = 0.5,
+                           simulations = 10000) {
+  
+  if (!(type %in% c("one.sample", "two.sample"))) {
+    stop("type must be 'one.sample' or 'two.sample'")
+  }
+  
+  if (!is.numeric(sample_size) || sample_size <= 0) {
+    stop("sample_size must be a positive number.")
+  }
+  
+  if (!is.numeric(threshold)) {
+    stop("threshold must be numeric.")
+  }
+  
+  if (quant <= 0 || quant >= 1) {
+    stop("quant must be between 0 and 1.")
+  }
+  
+  # === One-Arm Posterior ===
+  if (type == "one.sample") {
+    if (is.null(total_count)) {
+      stop("For one.sample, please provide total_count.")
+    }
+    
+    shape_post <- a_t + total_count
+    rate_post <- b_t + sample_size
+    
+    post_draws <- rgamma(simulations, shape = shape_post, rate = rate_post)
+    post_prob <- mean(post_draws > threshold)
+    
+  } else {
+    # === Two-Arm Posterior ===
+    if (is.null(count_treat) || is.null(count_ctrl)) {
+      stop("For two.sample, please provide count_treat and count_ctrl.")
+    }
+    
+    shape_t <- a_t + count_treat
+    rate_t <- b_t + sample_size
+    post_t <- rgamma(simulations, shape_t, rate = rate_t)
+    
+    shape_c <- a_c + count_ctrl
+    rate_c <- b_c + sample_size
+    post_c <- rgamma(simulations, shape_c, rate = rate_c)
+    
+    diff <- post_t - post_c
+    post_prob <- mean(diff > threshold)
+  }
+  
+  if (quant == 0.5) {
+    return(post_prob)
+  } else {
+    adjust <- (2 * quant - 1) * post_prob
+    return((quant * post_prob) / (1 - quant + adjust))
+  }
+}
+
+Count_Sample_Size = function(type = "one.sample",
+                             threshold,
+                             crit,
+                             effect_size,
+                             a_t = 0.5, b_t = 0.5,
+                             a_c = 0.5, b_c = 0.5,
+                             min_n = 5, max_n = 100,
+                             quant = 0.5,
+                             sim = 10000, s_reps = 1000) {
+  
+  if (!(type %in% c("one.sample", "two.sample"))) stop("type must be 'one.sample' or 'two.sample'.")
+  if (!is.numeric(threshold) || !is.numeric(crit)) stop("threshold and crit must be numeric.")
+  if (!is.numeric(effect_size) || effect_size <= 0) stop("effect_size must be a positive number.")
+  
+  n_seq <- seq(min_n, max_n)
+  
+  if (type == "one.sample") {
+    prob_vec <- numeric(length(n_seq))
+    count_vec <- numeric(length(n_seq))
+    
+    for (i in seq_along(n_seq)) {
+      n <- n_seq[i]
+      total_count <- floor(n * effect_size)
+      prob_vec[i] <- Count_Post_Prob(type = "one.sample",
+                                     threshold = threshold,
+                                     sample_size = n,
+                                     total_count = total_count,
+                                     a_t = a_t, b_t = b_t,
+                                     quant = quant,
+                                     simulations = sim)
+      count_vec[i] <- total_count
+    }
+    
+    if (prob_vec[1] >= crit) return("Can lower min_n.")
+    if (tail(prob_vec, 1) < crit) return("Need to increase max_n.")
+    
+    final_idx <- which(prob_vec >= crit)[1]
+    return(list(n = n_seq[final_idx],
+                yd = count_vec[final_idx],
+                n_seq = n_seq,
+                yd_vec = count_vec,
+                prob_h1_vec = prob_vec))
+  }
+  
+  if (type == "two.sample") {
+    result <- Two_Arm_Gamma_Sample_Size(threshold = threshold,
+                                        crit = crit,
+                                        effect_size = effect_size,
+                                        a_t = a_t, b_t = b_t,
+                                        a_c = a_c, b_c = b_c,
+                                        min_n = min_n, max_n = max_n,
+                                        quant = quant,
+                                        s_reps = s_reps, reps = sim)
+    return(result)
   }
 }
