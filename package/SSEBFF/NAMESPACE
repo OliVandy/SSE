@@ -1,4 +1,5 @@
 importFrom("stats", "integrate", "qnorm", "rbinom", "pnorm", "rbeta", "rgamma", "rpois", "qbeta","rnorm", "pbeta", "pgamma", "qt", "rnbinom", "rnorm", "sd", "var")
+
 importFrom("utils", "tail")
 export("One_Arm_Post_Prob_Theta")
 export("One_Arm_Post_Prob_H1")
