@@ -19,7 +19,7 @@ Two_Arm_Combined_Post_Prob(type = c("continuous", "count", "binary"),
   \item{type}{Character. Outcome type. Must be one of \code{"binary"}, \code{"continuous"}, or \code{"count"}.}
   \item{count_treat}{Numeric. Number of successes (binary) or event counts (count) in the treatment group. Required for binary and count types.}
   \item{count_ctrl}{Numeric. Number of successes (binary) or event counts (count) in the control group. Required for binary and count types.}
-  \item{n}{Numeric. Sample size per arm. Required for all types.}
+  \item{sample_size}{Numeric. Sample size per arm. Required for all types.}
   \item{threshold}{Numeric. Threshold value (null margin) to compare against posterior difference (e.g. \eqn{\theta_0}).}
   \item{effect_size}{Numeric. Observed or assumed effect size. Required for continuous type.}
   \item{alpha1, beta1}{Numerics. Beta prior parameters for the control group (binary outcomes).}
