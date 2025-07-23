@@ -7,17 +7,13 @@
   Combined_Post_Prob: Computes the posterior probability that the treatment effect exceeds a defined threshold in two-arm Bayesian trials. Supports binary, continuous, and count data types using conjugate priors and optional quantile adjustment.
 }
 \usage{
-Two_Arm_Combined_Post_Prob(type = c("binary", "continuous", "count"),
-                               count_treat = NULL, count_ctrl = NULL,
-                               n = NULL,
-                               threshold, effect_size = NULL,
-                               alpha1 = 0.5, beta1 = 0.5,
-                               alpha2 = 0.5, beta2 = 0.5,
-                               prior_mean = NULL, prior_sd = NULL,
-                               sigma = 1,
-                               a_t = NULL, b_t = NULL,
-                               a_c = NULL, b_c = NULL,
-                               quant = 0.5, simulations = 10000)
+Two_Arm_Combined_Post_Prob(type = c("continuous", "count", "binary"),
+                 sample_size, threshold, effect_size = NULL, prior_mean
+                 = NULL, prior_sd = NULL, sigma = 1, count_treat =
+                 NULL, count_ctrl = NULL, a_t = NULL, b_t = NULL, a_c =
+                 NULL, b_c = NULL, obs_t = NULL, obs_c = NULL, alpha1 =
+                 0.5, beta1 = 0.5, alpha2 = 0.5, beta2 = 0.5,
+                 prior_weight = 0.5, quant = 0.5, simulations = 10000)
 }
 \arguments{
   \item{type}{Character. Outcome type. Must be one of \code{"binary"}, \code{"continuous"}, or \code{"count"}.}
@@ -69,7 +65,7 @@ Two_Arm_Combined_Post_Prob(
   type = "binary",
   count_treat = 25,
   count_ctrl = 15,
-  n = 50,
+  sample_size = 50,
   threshold = 0,
   alpha1 = 0.5,
   beta1 = 0.5,
@@ -81,7 +77,7 @@ Two_Arm_Combined_Post_Prob(
 # Continuous example
 Two_Arm_Combined_Post_Prob(
   type = "continuous",
-  n = 50,
+  sample_size = 50,
   threshold = 0,
   effect_size = 0.3,
   prior_mean = 0,
@@ -95,7 +91,7 @@ Two_Arm_Combined_Post_Prob(
   type = "count",
   count_treat = 60,
   count_ctrl = 40,
-  n = 50,
+  sample_size = 50,
   threshold = 0,
   a_t = 1, b_t = 1,
   a_c = 1, b_c = 1,
