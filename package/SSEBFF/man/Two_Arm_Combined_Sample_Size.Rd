@@ -94,6 +94,4 @@ Two_Arm_Combined_Sample_Size(
 
 \seealso{
   \code{\link{Two_Arm_Binary_Post_Prob}},
-  \code{\link{Two_Arm_Cont_Post_Prob}},
-  \code{\link{Two_Arm_Count_Post_Prob}}
 }
