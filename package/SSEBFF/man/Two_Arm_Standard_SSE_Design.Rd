@@ -6,12 +6,9 @@ Simulates a two‑arm clinical trial with binary outcomes.
 The design supports an optional interim look that applies a Bayesian error‑spending rule; otherwise, the final decision is based on a traditional frequentist z‑test against a non‑inferiority/superiority margin.
 }
 \usage{
-Two_Arm_Standard_SSE_Design(
-  n_f, theta_H, theta_L, theta_s, alpha,
-  interim = FALSE, n_0 = NA,
-  a1 = 0.05, b1 = 0.05, a2 = 0.05, b2 = 0.05,
-  q = 0.5, c = 0.7, c_s = 0.3
-)
+Two_Arm_Standard_SSE_Design(n_f, theta_H, theta_L, theta_s, alpha, interim = F,
+                 n_0 = NA, a1 = 0.05, b1 = 0.05, a2 = 0.05, b2 = 0.05,
+                 q = 0.5, c = 0.7, c_s = 0.3)
 }
 \arguments{
   \item{n_f}{Final (maximum) sample size per arm.}
