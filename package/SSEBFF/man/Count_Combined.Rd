@@ -20,8 +20,18 @@ Count_Post_Prob(type = "one.sample",
                 a_c = 0.5, b_c = 0.5,
                 quant = 0.5,
                 simulations = 10000)
+Count_Sample_Size(type = "one.sample",
+                  threshold,
+                  crit,
+                  effect_size,
+                  a_t = 0.5, b_t = 0.5,
+                  a_c = 0.5, b_c = 0.5,
+                  min_n = 5, max_n = 100,
+                  quant = 0.5,
+                  sim = 10000, s_reps = 1000)
 }
 \arguments{
+  \item{type}{Character string. Type of test: \code{"one.sample"} or \code{"two.sample"}.}
   \item{effect_size}{Assumed difference in means between treatment and control.}
   \item{sample_size}{Sample size per arm.}
   \item{threshold}{Minimum difference in rates to be declared effective.}
@@ -31,9 +41,10 @@ Count_Post_Prob(type = "one.sample",
   \item{b_c}{Rate parameter for the Gamma prior on control group rate.}
   \item{quant}{Weighting factor for quantile posterior adjustment (default is 0.5, i.e., no adjustment).}
   \item{s_reps}{Number of simulations for prior sampling (default 10000).}
-  \item{reps}{Number of posterior simulations per trial (default 10000).}
+  \item{sim}{Number of posterior simulations per trial (default 10000).}
   \item{count_treat}{Number of events in the treatment group.}
   \item{count_ctrl}{Number of events in the control group.}
+  \item{total_count}{Total combined count for one-sample testing.}
   \item{simulations}{Number of posterior draws.}
   \item{crit}{Minimum acceptable posterior probability for design success.}
   \item{min_n}{Minimum sample size to consider (default 5).}
