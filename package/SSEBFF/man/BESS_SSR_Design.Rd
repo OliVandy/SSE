@@ -96,7 +96,7 @@ Rachel Zhuang
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\code{\link{Post_Prob_Bayes}}, \code{\link{BESS_binary}}, \code{\link{Two_Arm_BESS_Binary}}
+\code{\link{Post_Prob_Bayes}}
 }
 \examples{
 BESS_SSR_Design(type = "two.sample", theta_H = 0.7, theta_L = 0.5,
