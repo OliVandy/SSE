@@ -194,12 +194,10 @@ BESS_SSR_Design = function(type = "two.sample",
   if (!(type %in% c("one.sample", "two.sample"))) stop("type must be 'one.sample' or 'two.sample'")
   if (is.null(outcome) || !(outcome %in% c(1, 2, 3))) stop("Specify outcome: 1 = binary, 2 = continuous, 3 = count.")
   
-  # Placeholders
   y_H <- y_L <- y_H_s <- y_L_s <- NULL
   y <- y_s <- NULL
   e_s <- pH1 <- pH1_s <- n_s <- bess_dec <- bess_int_dec <- NA
   
-  ### === ONE SAMPLE DESIGN === ###
   if (type == "one.sample") {
     if (outcome == 1) y <- rbinom(n0, 1, theta_H)
     if (outcome == 2) y <- rnorm(n0, mean = theta_H, sd = sig)
@@ -207,7 +205,6 @@ BESS_SSR_Design = function(type = "two.sample",
     
     e_obs <- if (outcome == 3) sum(y) / n0 else mean(y)
     
-    # Posterior probability for interim
     if (outcome == 3) {
       pH1 <- One_Arm_Count_Post_Prob(count = sum(y), n = n0, threshold = theta_s,
                                      a = a, b = b, quant = q)
@@ -220,13 +217,11 @@ BESS_SSR_Design = function(type = "two.sample",
     bess_int_dec <- ifelse(pH1 >= c, 1, ifelse(pH1 <= c_s, 0, 2))
     
     if (bess_int_dec == 2) {
-      # Update prior
       if (outcome == 1) {
         a_ip <- a + sum(y)
         b_ip <- b + n0 - sum(y)
         post_mean <- a_ip / (a_ip + b_ip)
         e_s <- post_mean
-        # Use binary BESS
         ss_result <- BESS_binary(margin = theta_s, threshold = c, delta = e_s,
                                  min_n = n_min, max_n = n_max,
                                  alpha1 = a_ip, beta1 = b_ip,
@@ -237,7 +232,6 @@ BESS_SSR_Design = function(type = "two.sample",
         b_ip <- sig / sqrt(n0)
         post_mean <- a_ip
         e_s <- post_mean
-        # Use continuous BESS
         ss_result <- BESS_continuous(margin = theta_s, threshold = c, delta = e_s,
                                      min_n = n_min, max_n = n_max,
                                      alpha = a_ip, beta = b_ip, sig = sig, q = q)
@@ -247,7 +241,6 @@ BESS_SSR_Design = function(type = "two.sample",
         b_ip <- b + n0
         post_mean <- a_ip / b_ip
         e_s <- post_mean
-        # Use count BESS
         ss_result <- One_Arm_Count_Sample_Size(threshold = theta_s, crit = c, effect_size = e_s,
                                                a = a_ip, b = b_ip, min_n = n_min, max_n = n_max, quant = q)
         n_s <- ss_result$n
@@ -291,7 +284,6 @@ BESS_SSR_Design = function(type = "two.sample",
     
     e_obs <- if (outcome == 3) (sum(y_L) - sum(y_H)) / n0 else mean(y_L) - mean(y_H)
     
-    # Posterior probability for interim
     if (outcome == 3) {
       pH1 <- Two_Arm_Count_Post_Prob(
         count_treat = sum(y_H), count_ctrl = sum(y_L), sample_size = n0,
@@ -299,7 +291,7 @@ BESS_SSR_Design = function(type = "two.sample",
         a_t = a2, b_t = b2, a_c = a1, b_c = b1, quant = q
       )
     } else {
-      pH1 <- Post_Prob_Bayes(type = "two.sample", n = n0,
+      pH1 <- Post_Prob_Bayes(type = "two.sample", n = n0, outcome = outcome,
                              delta = -theta_s, Y_t = sum(y_H), Y_c = sum(y_L),
                              a1 = a1, b1 = b1, a2 = a2, b2 = b2,
                              q = q, sim = 10000)
@@ -333,7 +325,6 @@ BESS_SSR_Design = function(type = "two.sample",
                                              a1 = a1_ip, b1 = b1_ip, a2 = a2_ip, b2 = b2_ip, q = q)
         n_s <- ss_result$n
       } else {
-        # outcome == 3 (count)
         a1_ip <- a1 + sum(y_L)
         b1_ip <- b1 + n0
         a2_ip <- a2 + sum(y_H)
@@ -348,6 +339,7 @@ BESS_SSR_Design = function(type = "two.sample",
         )
         n_s <- ss_result$n
       }
+      
       if (cap && n_s > n_cap - n0) n_s <- n_cap - n0
       
       if (outcome == 1) {
@@ -367,7 +359,7 @@ BESS_SSR_Design = function(type = "two.sample",
           threshold = -theta_s, a_t = a2_ip, b_t = b2_ip, a_c = a1_ip, b_c = b1_ip, quant = q
         )
       } else {
-        pH1_s <- Post_Prob_Bayes(type = "two.sample", n = n_s,
+        pH1_s <- Post_Prob_Bayes(type = "two.sample", n = n_s, outcome = outcome,
                                  delta = -theta_s, Y_t = sum(y_H_s), Y_c = sum(y_L_s),
                                  a1 = a1_ip, b1 = b1_ip, a2 = a2_ip, b2 = b2_ip,
                                  q = q, sim = 10000)
