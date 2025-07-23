@@ -5,14 +5,14 @@
   Implements an adaptive Bayesian sample size re-estimation (SSR) design for both one-arm and two-arm trials with support for binary, continuous, and count outcomes. This function performs an interim analysis and determines whether the trial should stop early for success or futility, or continue with an updated sample size based on posterior predictive evidence.
 }
 \usage{
-BESS_SSR_Design = function(type = "two.sample",
-                           theta_H = NULL, theta_L = NULL, theta_s,
-                           c, c_s, n0,
-                           outcome = NULL,
-                           a = 0.5, b = 0.5, sig = 1,
-                           a1 = 0.5, b1 = 0.5, a2 = 0.5, b2 = 0.5,
-                           q = 0.5, n_min = 1, n_max = 200,
-                           cap = FALSE, n_cap = 200)
+BESS_SSR_Design(type = "two.sample",
+                theta_H = NULL, theta_L = NULL, theta_s,
+                c, c_s, n0,
+                outcome = NULL,
+                a = 0.5, b = 0.5, sig = 1,
+                a1 = 0.5, b1 = 0.5, a2 = 0.5, b2 = 0.5,
+                q = 0.5, n_min = 1, n_max = 200,
+                cap = FALSE, n_cap = 200)
 }
 \arguments{
   \item{type}{Character string. Trial type: either \code{"one.sample"} or \code{"two.sample"}.}
