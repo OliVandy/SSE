@@ -60,10 +60,6 @@ Two_Arm_Combined_Sample_Size(type = c("binary", "continuous", "count"),
 }
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
-
-\seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
-}
 \examples{
 # Binary outcome example
 Two_Arm_Combined_Sample_Size(
@@ -90,8 +86,4 @@ Two_Arm_Combined_Sample_Size(
   effect_size = 0.2,
   a_t = 1, b_t = 1,
   a_c = 1, b_c = 1)
-}
-
-\seealso{
-  \code{\link{Two_Arm_Binary_Post_Prob}},
 }
