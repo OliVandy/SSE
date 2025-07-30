@@ -308,8 +308,8 @@ BESS_SSR_Design = function(type = "two.sample",
         post_mean_L <- a1_ip / (a1_ip + b1_ip)
         post_mean_H <- a2_ip / (a2_ip + b2_ip)
         e_s <- post_mean_L - post_mean_H
-        ss_result <- Two_Arm_BESS_Binary(margin = -theta_s, threshold = c, delta = e_s,
-                                         min_n = n_min, max_n = n_max,
+        ss_result <- Two_Arm_BESS_Binary(theta0 = -theta_s, c = c, e = e_s,
+                                         n_min = n_min, n_max = n_max,
                                          a1 = a1_ip, b1 = b1_ip, a2 = a2_ip, b2 = b2_ip, q = q)
         n_s <- ss_result$n
       } else if (outcome == 2) {
