@@ -29,6 +29,9 @@ Two_Arm_Combined_Post_Prob(type = c("continuous", "count", "binary"),
   \item{sigma}{Numeric. Known standard deviation of the continuous outcome. Default is 1.}
   \item{a_t, b_t}{Numerics. Shape and rate of Gamma prior for treatment group (count outcomes).}
   \item{a_c, b_c}{Numerics. Shape and rate of Gamma prior for control group (count outcomes).}
+  \item{obs_t}{Observed data for the treatment group. Used for posterior updating in Bayesian analysis.}
+  \item{obs_c}{Observed data for the control group. Used for posterior updating in Bayesian analysis.}
+  \item{prior_weight}{Prior belief weight for the treatment being superior; used to mix posterior with prior belief. Default is 0.5.}
   \item{quant}{Numeric. Posterior quantile correction factor. Default is 0.5 (no correction).}
   \item{simulations}{Integer. Number of samples drawn for posterior estimation in binary and count outcomes. Default is 10,000.}
 }
