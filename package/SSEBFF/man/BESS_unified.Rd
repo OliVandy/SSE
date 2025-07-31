@@ -37,16 +37,16 @@ The function checks whether the posterior probability (or its adjusted version) 
 The function iteratively increases the sample size starting from \code{n_min} and computes the minimum posterior probability \code{xi} for an observed difference \code{yd = floor(e * n)} using \code{Two_Arm_Find_Min_Xi}. The smallest sample size for which the posterior probability exceeds \code{c} is returned.
 }
 \value{
-A list containing:
-\itemize{
-  \item{\code{n}}{Estimated minimum sample size required.}
-  \item{\code{vec}}{Posterior probabilities (or minimum \code{xi}) at each evaluated sample size.}
-  \item{\code{n_seq}}{Sequence of evaluated sample sizes.}
-  \item{\code{m_vec}}{Observed successes (one-sample binary/count only).}
-  \item{\code{yd}}{Count of expected treatment-control effect difference.}
-  \item{\code{yd_vec}}{(Two-arm binary only) Vector of event allocations evaluated at each sample size.}
-  \item{\code{y1_vec, y2_vec}}{(Two-arm binary only) Event allocations in treatment and control arms that achieve the minimum posterior probability above the threshold.}
-}
+  A list with the following components:
+  \describe{
+    \item{\code{n}}{Estimated minimum sample size required.}
+    \item{\code{vec}}{Posterior probabilities (or minimum \code{xi}) at each evaluated sample size.}
+    \item{\code{n_seq}}{Sequence of evaluated sample sizes.}
+    \item{\code{m_vec}}{Observed successes (one-sample binary/count only).}
+    \item{\code{yd}}{Count of expected treatment-control effect difference.}
+    \item{\code{yd_vec}}{(Two-arm binary only) Vector of event allocations evaluated at each sample size.}
+    \item{\code{y1_vec, y2_vec}}{(Two-arm binary only) Event allocations in treatment and control arms that achieve the minimum posterior probability above the threshold.}
+  }
 }
 \examples{
 # One-sample, binary
