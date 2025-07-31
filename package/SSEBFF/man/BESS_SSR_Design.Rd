@@ -28,6 +28,7 @@ BESS_SSR_Design(type = "two.sample",
   \item{b1}{Beta hyperparameter for Beta prior of the control group (default 0.05).}
   \item{a2}{Alpha hyperparameter for Beta prior of the treatment group (default 0.05).}
   \item{b2}{Beta hyperparameter for Beta prior of the treatment group (default 0.05).}
+  \item{sig}{Standard deviation of the outcome for continuous-type models. Used when \code{type = "continuous"}.}
   \item{q}{Prior belief (weight) for treatment effect being positive (default 0.5).}
   \item{n_min}{Minimum sample size to be considered in re-estimation (default 1).}
   \item{n_max}{Maximum sample size allowed in re-estimation (default 200).}
