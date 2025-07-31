@@ -147,7 +147,7 @@ Two_Arm_Combined_Sample_Size = function(type = c("binary", "continuous", "count"
   } else if (type == "binary") {
     for (n in seq(min_n, max_n)) {
       d_obs = floor(effect_size * n)
-      worst = get_min_adjusted_prob(d_obs, n, threshold,
+      worst = Two_Arm_Binary_Min_Prob(d_obs, n, threshold,
                                     alpha1, beta1, alpha2, beta2,
                                     prior_weight, sims)
       if (worst$min_prob >= crit) {
@@ -158,7 +158,7 @@ Two_Arm_Combined_Sample_Size = function(type = c("binary", "continuous", "count"
     }
     # Fallback
     d_obs = floor(effect_size * max_n)
-    worst = get_min_adjusted_prob(d_obs, max_n, threshold,
+    worst = Two_Arm_Binary_Min_Prob(d_obs, max_n, threshold,
                                   alpha1, beta1, alpha2, beta2,
                                   prior_weight, sims)
     return(list(n_per_arm           = max_n,
@@ -235,7 +235,7 @@ BESS_binary = function(margin, threshold, delta,
                        iterations = 10000) {
   for (n in seq(min_n, max_n)) {
     d_obs = floor(delta * n)
-    worst = get_min_adjusted_prob(d_obs, n, margin,
+    worst = Two_Arm_Binary_Min_Prob(d_obs, n, margin,
                                   alpha1, beta1, alpha2, beta2,
                                   prior_weight, iterations)
     if (worst$min_prob >= threshold) {
@@ -248,7 +248,7 @@ BESS_binary = function(margin, threshold, delta,
   }
   # if threshold never met, return max_n result
   d_obs = floor(delta * max_n)
-  worst = get_min_adjusted_prob(d_obs, max_n, margin,
+  worst = Two_Arm_Binary_Min_Prob(d_obs, max_n, margin,
                                 alpha1, beta1, alpha2, beta2,
                                 prior_weight, iterations)
   list(
