@@ -1,3 +1,4 @@
+\encoding{UTF-8}
 \name{Two_Arm_Standard_SSE_Design}
 \alias{Two_Arm_Standard_SSE_Design}
 \title{Standard Frequentist Two‑Arm Design with Optional Interim Bayesian Stop}
@@ -41,16 +42,10 @@ Two_Arm_Standard_SSE_Design(n_f, theta_H, theta_L, theta_s, alpha, interim = F,
 %% ~put references to the literature/web site here ~
 }
 \author{
-%%  ~~who you are~~
+Rachel Zhuang
 }
 \note{
 %%  ~~further notes~~
-}
-
-%% ~Make other sections like Warning with \section{Warning }{....} ~
-
-\seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{
 ## one simulated study without interim look
