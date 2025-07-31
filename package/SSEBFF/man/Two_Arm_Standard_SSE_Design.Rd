@@ -39,7 +39,7 @@ Two_Arm_Standard_SSE_Design(n_f, theta_H, theta_L, theta_s, alpha, interim = F,
 %%  ~~ If necessary, more details than the description above ~~
 }
 \references{
-%% ~put references to the literature/web site here ~
+Y.Ji and D.Bi, "A Bayesian Estimator of Sample Size" (2024)
 }
 \author{
 Rachel Zhuang
