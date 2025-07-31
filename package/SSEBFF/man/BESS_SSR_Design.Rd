@@ -1,3 +1,4 @@
+\encoding{UTF-8}
 \name{BESS_SSR_Design}
 \alias{BESS_SSR_Design}
 \title{Bayesian Error Spending Strategy with Sample Size Re-Estimation for one and two-arm trials}
@@ -57,29 +58,33 @@ BESS_SSR_Design(type = "two.sample",
   For two-arm designs, each arm’s posterior is updated separately. For one-arm designs, only the treatment arm is modeled.
 }
 \value{
-  A list containing:
-  \item{For one-sample:}{
-    \describe{
-      \item{y_n0}{Observed interim data}
-      \item{pH1_int}{Posterior probability at interim}
-      \item{bess_int_dec}{Interim decision: 1 = stop for success, 0 = stop for futility, 2 = continue}
-      \item{y_ns}{Simulated additional data (if continued)}
-      \item{e_s}{Posterior mean after interim}
-      \item{n_s}{Re-estimated additional sample size}
-      \item{pH1_s}{Posterior probability at final}
-      \item{bess_fin_dec}{Final decision: 1 = success, 0 = futility}
+  A list with elements depending on the design type:
+  
+  \describe{
+    \item{One-sample design}{
+      \describe{
+        \item{\code{y_n0}}{Observed interim data}
+        \item{\code{pH1_int}}{Posterior probability at interim}
+        \item{\code{bess_int_dec}}{Interim decision: 1 = stop for success, 0 = stop for futility, 2 = continue}
+        \item{\code{y_ns}}{Simulated additional data (if continued)}
+        \item{\code{e_s}}{Posterior mean after interim}
+        \item{\code{n_s}}{Re-estimated additional sample size}
+        \item{\code{pH1_s}}{Posterior probability at final}
+        \item{\code{bess_fin_dec}}{Final decision: 1 = success, 0 = futility}
+      }
     }
-  }
-  \item{For two-sample:}{
-    \describe{
-      \item{y_H_n0, y_L_n0}{Observed interim data for experimental/control groups}
-      \item{pH1_int}{Posterior probability at interim}
-      \item{bess_int_dec}{Interim decision: 1 = stop for success, 0 = stop for futility, 2 = continue}
-      \item{y_H_ns, y_L_ns}{Simulated additional data (if continued)}
-      \item{e_s}{Posterior mean difference after interim}
-      \item{n_s}{Re-estimated additional sample size}
-      \item{pH1_s}{Posterior probability at final}
-      \item{bess_fin_dec}{Final decision: 1 = success, 0 = futility}
+    
+    \item{Two-sample design}{
+      \describe{
+        \item{\code{y_H_n0}, \code{y_L_n0}}{Observed interim data for experimental/control groups}
+        \item{\code{pH1_int}}{Posterior probability at interim}
+        \item{\code{bess_int_dec}}{Interim decision: 1 = stop for success, 0 = stop for futility, 2 = continue}
+        \item{\code{y_H_ns}, \code{y_L_ns}}{Simulated additional data (if continued)}
+        \item{\code{e_s}}{Posterior mean difference after interim}
+        \item{\code{n_s}}{Re-estimated additional sample size}
+        \item{\code{pH1_s}}{Posterior probability at final}
+        \item{\code{bess_fin_dec}}{Final decision: 1 = success, 0 = futility}
+      }
     }
   }
 }
