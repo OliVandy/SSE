@@ -284,6 +284,40 @@ Two_Arm_Bayes_Sample_Size = function(null_margin, threshold, expected_effect, mi
   return(list(n = final_n, yd = target_diff, n_seq = seq(min_n, max_n), vec = prob_vec, yd_vec = diff_vec, tr_vals = tr_vec, ct_vals = ct_vec))
 }
 
+Two_Arm_Cont_Sample_Size = function(theta0, c, e, a1, b1, a2, b2,
+                                    sig = 1, q = 0.5, n_min = 5, n_max = 100) {
+  if(n_min <= 0 || n_max < n_min || !is.double(n_min) || !is.double(n_max)){
+    stop("Please enter valid min and max values.")
+  }
+  
+  n_seq = seq(n_min, n_max)
+  s_vec = rep(NA, length(n_seq))  # vector of posterior probs
+  
+  cnt = 1
+  for(n in n_seq){
+    # simulate posterior samples under Normal assumption
+    mu1_samples = rnorm(10000, mean = a1, sd = sig / sqrt(n))
+    mu2_samples = rnorm(10000, mean = a2, sd = sig / sqrt(n))
+    
+    delta_samples = mu2_samples - mu1_samples  # treatment - control
+    s_vec[cnt] = mean(delta_samples > theta0)
+    
+    cnt = cnt + 1
+  }
+  
+  if (s_vec[1] >= c) {
+    return("Can lower n_min.")
+  }
+  if (s_vec[length(s_vec)] < c) {
+    return("Need to increase max sample size!")
+  }
+  
+  n_result = n_seq[which(s_vec >= c)[1]]
+  
+  return(list(n = n_result, n_seq = n_seq, vec = s_vec))
+}
+
+
 Two_Arm_Gamma_Post_Prob = function(count_treat, count_ctrl, sample_size, threshold, a_t, b_t, a_c, b_c, quant = 0.5, simulations = 10000) {
   shape_t = a_t + count_treat
   rate_t = b_t + sample_size
