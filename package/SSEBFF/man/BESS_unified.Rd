@@ -1,4 +1,3 @@
-\encoding{UTF-8}
 \name{BESS_unified}
 \alias{BESS_unified}
 \title{Bayesian Estimator of Sample Size (BESS) for One- and Two-Sample Designs}
