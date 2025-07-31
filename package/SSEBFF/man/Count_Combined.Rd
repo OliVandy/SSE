@@ -1,3 +1,4 @@
+\encoding{UTF-8}
 \name{Count_combined}
 \alias{Count_Post_Prob}
 \alias{Count_Sample_Size}
@@ -54,20 +55,21 @@ Count_Sample_Size(type = "one.sample",
 %%  ~~ If necessary, more details than the description above ~~
 }
 \value{
-  1. Post Prob: A scalar: posterior probability (adjusted if \code{quant} ≠ 0.5)./n
-  2. Sample Size: A list with:
-  \item{n}{The smallest sample size for which the posterior probability exceeds \code{crit}.}
-  \item{yd}{The expected number of events under the chosen sample size.}
-  \item{n_seq}{Vector of all \code{n} values evaluated from \code{min_n} to \code{max_n}.}
-  \item{prob_h1_vec}{Posterior probabilities for each evaluated \code{n}.}
-  \item{yd_vec}{Vector of expected total event counts for each \code{n}.}
-  \item{y1_vec, y2_vec}{(Two-arm only) Event counts in treatment and control arms achieving the minimal posterior for each \code{n}.}
+  A scalar (posterior probability) for \code{Count_Post_Prob}, or a list for \code{Count_Sample_Size} containing:
+  \describe{
+    \item{\code{n}}{The smallest sample size for which the posterior probability exceeds \code{crit}.}
+    \item{\code{yd}}{The expected number of events under the chosen sample size.}
+    \item{\code{n_seq}}{Vector of all \code{n} values evaluated from \code{min_n} to \code{max_n}.}
+    \item{\code{prob_h1_vec}}{Posterior probabilities for each evaluated \code{n}.}
+    \item{\code{yd_vec}}{Vector of expected total event counts for each \code{n}.}
+    \item{\code{y1_vec, y2_vec}}{(Two-arm only) Event counts in treatment and control arms achieving the minimal posterior for each \code{n}.}
+  }
 }
 \references{
 %% ~put references to the literature/web site here ~
 }
 \author{
-%%  ~~who you are~~
+Rachel Zhuang
 }
 \note{
 %%  ~~further notes~~
