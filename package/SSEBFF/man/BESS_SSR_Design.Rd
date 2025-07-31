@@ -107,7 +107,7 @@ Rachel Zhuang
 \examples{
 BESS_SSR_Design(type = "two.sample", theta_H = 0.7, theta_L = 0.5,
                 theta_s = 0.1, c = 0.9, c_s = 0.2, n0 = 50,
-                outcome = 1)
+                outcome = 1, e = 0.6)
 
 # One-arm count outcome
 BESS_SSR_Design(type = "one.sample", theta_H = 5,
