@@ -220,31 +220,25 @@ BESS_SSR_Design = function(type = "two.sample",
       if (outcome == 1) {
         a_ip <- a + sum(y)
         b_ip <- b + n0 - sum(y)
-        post_mean <- a_ip / (a_ip + b_ip)
-        e_s <- post_mean
-        ss_result <- BESS_binary(margin = theta_s, threshold = c, delta = e_s,
-                                 min_n = n_min, max_n = n_max,
-                                 alpha1 = a_ip, beta1 = b_ip,
-                                 prior_weight = 1, iterations = 10000)
-        n_s <- ss_result$n
+        e_s <- a_ip / (a_ip + b_ip)
       } else if (outcome == 2) {
         a_ip <- mean(y)
-        b_ip <- sig / sqrt(n0)
-        post_mean <- a_ip
-        e_s <- post_mean
-        ss_result <- BESS_continuous(margin = theta_s, threshold = c, delta = e_s,
-                                     min_n = n_min, max_n = n_max,
-                                     alpha = a_ip, beta = b_ip, sig = sig, q = q)
-        n_s <- ss_result$n
+        b_ip <- sig / sqrt(n0)  # not used in One_Arm_BESS, but good to keep for reference
+        e_s <- a_ip
       } else {
         a_ip <- a + sum(y)
         b_ip <- b + n0
-        post_mean <- a_ip / b_ip
-        e_s <- post_mean
-        ss_result <- One_Arm_Count_Sample_Size(threshold = theta_s, crit = c, effect_size = e_s,
-                                               a = a_ip, b = b_ip, min_n = n_min, max_n = n_max, quant = q)
-        n_s <- ss_result$n
+        e_s <- a_ip / b_ip
       }
+      
+      ss_result <- One_Arm_BESS(theta0 = theta_s, c = c, e = e_s,
+                                outcome = outcome, a = a_ip, b = b_ip,
+                                q = q, sig = sig, n_min = n_min, n_max = n_max)
+      
+      # Handle return value in case of error messages
+      if (is.character(ss_result)) stop(ss_result)
+      n_s <- ss_result$n
+      
       if (cap && n_s > n_cap - n0) n_s <- n_cap - n0
       
       if (outcome == 1) y_s <- rbinom(n_s, 1, theta_H)
@@ -320,9 +314,8 @@ BESS_SSR_Design = function(type = "two.sample",
         a2_ip <- post_mean_H
         b2_ip <- sig / sqrt(n0)
         e_s <- post_mean_L - post_mean_H
-        ss_result <- Two_Arm_BESS_Continuous(margin = -theta_s, threshold = c, delta = e_s,
-                                             min_n = n_min, max_n = n_max,
-                                             a1 = a1_ip, b1 = b1_ip, a2 = a2_ip, b2 = b2_ip, q = q)
+        ss_result <- Two_Arm_Cont_Sample_Size(theta0 = -theta_s, c = c, e = e_s,
+          a1 = a1_ip, b1 = b1_ip, a2 = a2_ip, b2 = b2_ip, sig = sig, q = q, n_min = n_min, n_max = n_max)
         n_s <- ss_result$n
       } else {
         a1_ip <- a1 + sum(y_L)
@@ -332,11 +325,8 @@ BESS_SSR_Design = function(type = "two.sample",
         post_mean_L <- a1_ip / b1_ip
         post_mean_H <- a2_ip / b2_ip
         e_s <- post_mean_L - post_mean_H
-        ss_result <- Two_Arm_Count_Sample_Size(
-          threshold = -theta_s, crit = c, effect_size = e_s,
-          a_t = a2_ip, b_t = b2_ip, a_c = a1_ip, b_c = b1_ip,
-          min_n = n_min, max_n = n_max, quant = q
-        )
+        ss_result <- Two_Arm_Gamma_Sample_Size(threshold = -theta_s, crit = c, effect_size = e_s,
+          a_t = a2_ip, b_t = b2_ip, a_c = a1_ip, b_c = b1_ip, min_n = n_min, max_n = n_max, quant = q)
         n_s <- ss_result$n
       }
       
