@@ -284,7 +284,7 @@ Two_Arm_Bayes_Sample_Size = function(null_margin, threshold, expected_effect, mi
   return(list(n = final_n, yd = target_diff, n_seq = seq(min_n, max_n), vec = prob_vec, yd_vec = diff_vec, tr_vals = tr_vec, ct_vals = ct_vec))
 }
 
-Two_Arm_Cont_Sample_Size = function(theta0, c, e, a1, b1, a2, b2,
+Two_Arm_Cont_SS = function(theta0, c, e, a1, b1, a2, b2,
                                     sig = 1, q = 0.5, n_min = 5, n_max = 100) {
   if(n_min <= 0 || n_max < n_min || !is.double(n_min) || !is.double(n_max)){
     stop("Please enter valid min and max values.")
@@ -316,7 +316,6 @@ Two_Arm_Cont_Sample_Size = function(theta0, c, e, a1, b1, a2, b2,
   
   return(list(n = n_result, n_seq = n_seq, vec = s_vec))
 }
-
 
 Two_Arm_Gamma_Post_Prob = function(count_treat, count_ctrl, sample_size, threshold, a_t, b_t, a_c, b_c, quant = 0.5, simulations = 10000) {
   shape_t = a_t + count_treat
