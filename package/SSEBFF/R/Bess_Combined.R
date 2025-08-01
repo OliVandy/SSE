@@ -234,8 +234,6 @@ BESS_SSR_Design = function(type = "two.sample",
       ss_result <- One_Arm_BESS(theta0 = theta_s, c = c, e = e_s,
                                 outcome = outcome, a = a_ip, b = b_ip,
                                 q = q, sig = sig, n_min = n_min, n_max = n_max)
-      
-      # Handle return value in case of error messages
       if (is.character(ss_result)) stop(ss_result)
       n_s <- ss_result$n
       
@@ -268,15 +266,18 @@ BESS_SSR_Design = function(type = "two.sample",
     if (outcome == 1) {
       y_H <- rbinom(n0, 1, theta_H)
       y_L <- rbinom(n0, 1, theta_L)
+      prop_H <- mean(y_H)
+      prop_L <- mean(y_L)
+      e_obs <- prop_L - prop_H
     } else if (outcome == 2) {
       y_H <- rnorm(n0, mean = theta_H, sd = sig)
       y_L <- rnorm(n0, mean = theta_L, sd = sig)
+      e_obs <- mean(y_L) - mean(y_H)
     } else {
       y_H <- rpois(n0, lambda = theta_H)
       y_L <- rpois(n0, lambda = theta_L)
+      e_obs <- (sum(y_L) - sum(y_H)) / n0
     }
-    
-    e_obs <- if (outcome == 3) (sum(y_L) - sum(y_H)) / n0 else mean(y_L) - mean(y_H)
     
     if (outcome == 3) {
       pH1 <- Two_Arm_Count_Post_Prob(
@@ -284,6 +285,12 @@ BESS_SSR_Design = function(type = "two.sample",
         threshold = -theta_s,
         a_t = a2, b_t = b2, a_c = a1, b_c = b1, quant = q
       )
+    } else if (outcome == 1) {
+      pH1 <- Post_Prob_Bayes(type = "two.sample", n = n0, outcome = outcome,
+                             delta = -theta_s, Y_t = sum(y_H), Y_c = sum(y_L),
+                             e = e_obs,       # <- THIS IS THE FIX!
+                             a1 = a1, b1 = b1, a2 = a2, b2 = b2,
+                             q = q, sim = 10000)
     } else {
       pH1 <- Post_Prob_Bayes(type = "two.sample", n = n0, outcome = outcome,
                              delta = -theta_s, Y_t = sum(y_H), Y_c = sum(y_L),
@@ -315,7 +322,7 @@ BESS_SSR_Design = function(type = "two.sample",
         b2_ip <- sig / sqrt(n0)
         e_s <- post_mean_L - post_mean_H
         ss_result <- Two_Arm_Cont_Sample_Size(theta0 = -theta_s, c = c, e = e_s,
-          a1 = a1_ip, b1 = b1_ip, a2 = a2_ip, b2 = b2_ip, sig = sig, q = q, n_min = n_min, n_max = n_max)
+                                              a1 = a1_ip, b1 = b1_ip, a2 = a2_ip, b2 = b2_ip, sig = sig, q = q, n_min = n_min, n_max = n_max)
         n_s <- ss_result$n
       } else {
         a1_ip <- a1 + sum(y_L)
@@ -326,7 +333,7 @@ BESS_SSR_Design = function(type = "two.sample",
         post_mean_H <- a2_ip / b2_ip
         e_s <- post_mean_L - post_mean_H
         ss_result <- Two_Arm_Gamma_Sample_Size(threshold = -theta_s, crit = c, effect_size = e_s,
-          a_t = a2_ip, b_t = b2_ip, a_c = a1_ip, b_c = b1_ip, min_n = n_min, max_n = n_max, quant = q)
+                                               a_t = a2_ip, b_t = b2_ip, a_c = a1_ip, b_c = b1_ip, min_n = n_min, max_n = n_max, quant = q)
         n_s <- ss_result$n
       }
       
@@ -335,24 +342,28 @@ BESS_SSR_Design = function(type = "two.sample",
       if (outcome == 1) {
         y_H_s <- rbinom(n_s, 1, theta_H)
         y_L_s <- rbinom(n_s, 1, theta_L)
+        prop_H_s <- mean(y_H_s)
+        prop_L_s <- mean(y_L_s)
+        e_s_new <- prop_L_s - prop_H_s
+        pH1_s <- Post_Prob_Bayes(type = "two.sample", n = n_s, outcome = outcome,
+                                 delta = -theta_s, Y_t = sum(y_H_s), Y_c = sum(y_L_s),
+                                 e = e_s_new,
+                                 a1 = a1_ip, b1 = b1_ip, a2 = a2_ip, b2 = b2_ip,
+                                 q = q, sim = 10000)
       } else if (outcome == 2) {
         y_H_s <- rnorm(n_s, mean = theta_H, sd = sig)
         y_L_s <- rnorm(n_s, mean = theta_L, sd = sig)
-      } else {
-        y_H_s <- rpois(n_s, lambda = theta_H)
-        y_L_s <- rpois(n_s, lambda = theta_L)
-      }
-      
-      if (outcome == 3) {
-        pH1_s <- Two_Arm_Count_Post_Prob(
-          count_treat = sum(y_H_s), count_ctrl = sum(y_L_s), sample_size = n_s,
-          threshold = -theta_s, a_t = a2_ip, b_t = b2_ip, a_c = a1_ip, b_c = b1_ip, quant = q
-        )
-      } else {
         pH1_s <- Post_Prob_Bayes(type = "two.sample", n = n_s, outcome = outcome,
                                  delta = -theta_s, Y_t = sum(y_H_s), Y_c = sum(y_L_s),
                                  a1 = a1_ip, b1 = b1_ip, a2 = a2_ip, b2 = b2_ip,
                                  q = q, sim = 10000)
+      } else {
+        y_H_s <- rpois(n_s, lambda = theta_H)
+        y_L_s <- rpois(n_s, lambda = theta_L)
+        pH1_s <- Two_Arm_Count_Post_Prob(
+          count_treat = sum(y_H_s), count_ctrl = sum(y_L_s), sample_size = n_s,
+          threshold = -theta_s, a_t = a2_ip, b_t = b2_ip, a_c = a1_ip, b_c = b1_ip, quant = q
+        )
       }
       bess_dec <- ifelse(pH1_s >= c, 1, 0)
     }
