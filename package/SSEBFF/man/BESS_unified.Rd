@@ -53,7 +53,7 @@ The function iteratively increases the sample size starting from \code{n_min} an
 BESS_unified(theta0 = 0.5, c = 0.95, e = 0.6, type = "one.sample",
              outcome = 1, a = 1, b = 1, q = 0.5)
 
-# Two-sample
+# Two-sample, continuous
 BESS_unified(theta0 = 0.1, c = 0.95, e = 0.6, type = "two.sample",
-             a1 = 1, b1 = 1, a2 = 1, b2 = 1, q = 0.5)
+             outcome = 2, a1 = 1, b1 = 1, a2 = 1, b2 = 1, q = 0.5)
 }
