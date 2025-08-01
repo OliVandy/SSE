@@ -14,7 +14,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 The SSEBFF package is designed to assist in sample size estimation for clinical trials across various paradigms, including Frequentist and Bayesian. This vignette focuses on the Bayesian paradigm.
 
-\section*{Introduction}
+## Introduction
 Sample size estimation is a critical step in the design of clinical trials. The SSEBFF package provides tools for estimating sample sizes in Bayesian clinical trial designs.
 
 In Bayesian paradigms, the sample size can be estimated using a Bayesian estimator that incorporates prior information and the desired posterior probability of success. The package allows users to specify the prior distribution, the effect size, and the desired level of statistical power.
@@ -27,7 +27,7 @@ library(SSEBFF)
 ```
 We will demonstrate the package function through example simulations. In this package we provide a combined function for sample size estimation for both one-arm and two-arm trials. 
 
-\section*{BESS_unified}
+### BESS_unified
 Estimates the minimum required sample size to achieve a desired posterior probability threshold c based on Bayesian inference, supporting binary and continuous outcomes for one-sample designs, and binary outcomes for two-sample designs. This is based on controlling the posterior probability xi to exceed a cutoff value c when the observed treatment effect exceeds a certain proportion e.
 
 e is the assumed value of $\theta$ under $H_a$ used to simulate or compute the probability of detecting an effect. In other words, how strong you think the treatment will work before you actually run the study. You’re guessing: “If I give this new drug to people, I think maybe it’ll help about 60% of them." you assume $\theta$ = 0.6 when simulating data.
@@ -40,7 +40,7 @@ BESS_unified(theta0 = 0.1, c = 0.95, e = 0.2, type = "one.sample",
              outcome = 1, a = 1, b = 1, q = 0.5)
 ```
 
-\section*{Post_Prob_Bayes: Posterior Probability}
+### Post_Prob_Bayes: Posterior Probability
 When we know the sample size, we could then use the `Post_Prob_Bayes` function to compute the posterior probability that a parameter exceeds a threshold using Bayesian updating for one-sample or two-sample scenarios. Supports binary and continuous outcomes for both one-arm and two-arm tests.
 
 The threshold, also referred to as margin, is the value we want to compare against, like a benchmark or a minimum effect size. For example, in a one-arm trial, it is the null hypothesis value, which is the value we want to test against, $\theta^* $. 
@@ -55,7 +55,7 @@ Post_Prob_Bayes(type = "one.sample", n = 30, theta0 = 178, outcome = 2, e = 175,
 ```
 The probability that the true mean is greater than 178 is about 0.0016%. It's extremely unlikely the true mean exceeds 178. We do not reject the null hypothesis.
 
-\section*{BESS_SSR_Design}
+### BESS_SSR_Design
 Because in real-world trials, uncertainty is high early on, and the original guess (the assumed effect size e) might be wrong, we need to restimate the sample size. This function performs a Bayesian Estimator of Sample Size (BESS) with interim analysis and optional sample size re-estimation for a binary, continuous, or count outcomes for both one-arm and two-arm clinical trial. 
 
 It starts with an interim analysis at a small sample size n0, then Decides whether to stop early for success or futility, or continue to the next stage. If continuing, re-estimates the sample size using Bayesian Expected Sample Size (BESS) methods based on observed interim data. Finally, it makes a decision after simulating the second-stage data.
@@ -66,7 +66,7 @@ c_s is the posterior probability threshold for early futility. If the posterior 
 
 cap is when we want to set a maximum sample size for the trial. If cap = TRUE and the re-estimated sample size exceeds n_cap, we stop the trial and declare success.
 
-For example, a hospital wants to evaluate whether a new sanitation protocol can reduce the average number of hospital-acquired infections (HAIs) in a particular ward. Historically, the ward sees about 5 infections per month ($\theta_H$ = 5). The hospital’s goal is to bring this average down to 4 or fewer per month ($\theta_s$ = 4). They use a Bayesian design to adaptively determine if the protocol is effective enough to recommend hospital-wide implementation.
+For example, a hospital wants to evaluate whether a new sanitation protocol can reduce the average number of hospital-acquired infections (HAIs) in a particular ward. Historically, the ward sees about 5 infections per month ($\theta_H = 5$). The hospital’s goal is to bring this average down to 4 or fewer per month ($\theta_s = 4$). They use a Bayesian design to adaptively determine if the protocol is effective enough to recommend hospital-wide implementation.
 
 We observe the number of infections over the first 60 days after implementing the new protocol. Then calculate the posterior probability that the true average infection rate is $\le4$ using the data from the first 60 days. 
 
@@ -79,20 +79,20 @@ BESS_SSR_Design(type = "one.sample", theta_H = 5,
                 outcome = 3)
 ```
 
-\section*{Gamma-Poisson Model}
+# Gamma-Poisson Model
 The Gamma-Poisson model is a Bayesian approach for analyzing count data, particularly useful in clinical trials where the outcome is a count of events (e.g., number of adverse events). This model assumes that the counts follow a Poisson distribution with a gamma-distributed rate parameter. The posterior probability in this case is the count of the treatment group has a higher event rate than count control.
 
-\section*{Count_Sample_Size}
+### Count_Sample_Size
 Computes the minimum sample size needed to achieve a posterior probability of superiority greater than or equal to a critical threshold, under a Gamma-Poisson model for count outcomes.
 
-Say we want to estimate the sample size needed to check if the average number of success shots made by a basketball Player A is greater than Player B by at least 1 event. We assume that the average shots/game for Player A is 12 and the average shots/game for Player B is 8. We want to be at least 90% sure (crit = 0.9) that our sample size is sufficient to detect this difference. In this case, we can use the `Count_Sample_Size` function to compute the sample size.
+Say we want to estimate the sample size needed to check if the average number of success shots made by a basketball Player A is greater than Player B by at least 1 event. We assume that the average shots/game for Player A is 12 and the average shots/game for Player B is 8. We want to be at least 90% sure ($crit = 0.9$) that our sample size is sufficient to detect this difference. In this case, we can use the `Count_Sample_Size` function to compute the sample size.
 ```{r}
 Count_Sample_Size(type = "two.sample",
                   threshold = 1, # We assume A is 1 shot/game better than B
-                  crit = 0.9, effect_size = 2, a_t = 0.5, b_t = 0.5, a_c = 0.5, b_c = 0.5)
+                  crit = 0.9, effect_size = 2, a_t = 0.5, b_t = 0.5, a_c = 0.5, b_c = 0.5, sim = 100)
 ```
 
-\section*{Count_Post_Prob}
+### Count_Post_Prob
 Computes the posterior probability that the treatment event rate exceeds the control rate by a threshold using Gamma priors and Poisson likelihoods.
 
 FOr example, you are monitoring the rate of hospital-acquired infections per 10 patient-days in the ICU unit. Over the past 20 patient-days, you observed 45 infection events. Historically, an infection rate above 2.5 per 10 patient-days is considered unacceptably high. You want to compute the posterior probability that the current infection rate exceeds 2.5 — using a weak prior (Gamma(0.5, 0.5)) to stay conservative.
@@ -102,7 +102,7 @@ Count_Post_Prob(type = "one.sample", total_count = 45, sample_size = 20,
 ```
 We’re 19.59% sure the true infection rate exceeds 2.5 — it's not a serious problem.
 
-\section*{Two_Arm_Standard_SSE_Design}
+### Two_Arm_Standard_SSE_Design
 Simulates a two‑arm clinical trial with binary outcomes.  
 The design supports an optional interim look that applies a Bayesian error‑spending rule; otherwise, the final decision is based on a traditional frequentist z‑test against a non‑inferiority/superiority margin.
 
@@ -124,8 +124,8 @@ Two_Arm_Standard_SSE_Design(
 ```
 In this case, the posterior probability of success is 0.74, which is less than the threshold of 0.975, so we stop early for futility. The decision indicator is 0, and number of subjects use is still 50.
 
-\section*{Non-Inferiority}
-\section*{Two_Arm_Combined_Sample_Size}
+## Non-Inferiority
+### Two_Arm_Combined_Sample_Size
 Determines the minimum sample size required for the posterior probability of a treatment effect to exceed a specified threshold, given a prior distribution and assumed effect. Supports binary, continuous, and count outcomes.
 
 prior_mean is the mean of your prior distribution for the treatment effect—basically, what you believe the average difference between the treatment and control groups is before seeing any data. It is your best guess of the treatment effect (or the difference in means) before collecting any data. prior_sd is how uncertain you are about that guess. A larger SD means more uncertainty.
@@ -167,7 +167,7 @@ Two_Arm_Combined_Post_Prob(
 )
 ```
 
-\section*{Conclusion}
+## Conclusion
 The SSEBFF package provides a comprehensive set of tools for sample size estimation in Bayesian clinical trials. By incorporating prior information, estimating sample size, and desired posterior probabilities, it allows researchers to design trials that are statistically sound and efficient. The functions provided in this package can handle various types of outcomes, including binary, continuous, and count data, making it versatile for different clinical trial designs.
 
 \section*{References}

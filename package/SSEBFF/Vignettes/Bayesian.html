@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<meta name="author" content="Rachel Zhuang and R. Oliver VandenBerg" />
+
+<meta name="date" content="2025-07-01" />
+
+<title>Sample Size Estimation for Clinical Trials in Multiple Paradigms-Bayesian</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Sample Size Estimation for Clinical Trials
+in Multiple Paradigms-Bayesian</h1>
+<h4 class="author">Rachel Zhuang and R. Oliver VandenBerg</h4>
+<h4 class="date">2025-07-01</h4>
+
+
+
+<p>The SSEBFF package is designed to assist in sample size estimation
+for clinical trials across various paradigms, including Frequentist and
+Bayesian. This vignette focuses on the Bayesian paradigm.</p>
+<div id="introduction" class="section level2">
+<h2>Introduction</h2>
+<p>Sample size estimation is a critical step in the design of clinical
+trials. The SSEBFF package provides tools for estimating sample sizes in
+Bayesian clinical trial designs.</p>
+<p>In Bayesian paradigms, the sample size can be estimated using a
+Bayesian estimator that incorporates prior information and the desired
+posterior probability of success. The package allows users to specify
+the prior distribution, the effect size, and the desired level of
+statistical power.</p>
+<p>One-arm trial means we are testing a single treatment against a null
+hypothesis. Two-arm trial means we are comparing two treatments, like a
+new drug against a control treatment.</p>
+<p>The hypothesis testing framework used in Bayesian paradigms is
+different from frequentist approaches. In Bayesian analysis, we
+calculate the posterior probability of the hypothesis given the data and
+prior information. The posterior probability is the probability of the
+alternative hypothesis being true after observing the data, which is a
+key difference from the frequentist approach that relies on
+p-values.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(SSEBFF)</span></code></pre></div>
+<p>We will demonstrate the package function through example simulations.
+In this package we provide a combined function for sample size
+estimation for both one-arm and two-arm trials.</p>
+<div id="bess_unified" class="section level3">
+<h3>BESS_unified</h3>
+<p>Estimates the minimum required sample size to achieve a desired
+posterior probability threshold c based on Bayesian inference,
+supporting binary and continuous outcomes for one-sample designs, and
+binary outcomes for two-sample designs. This is based on controlling the
+posterior probability xi to exceed a cutoff value c when the observed
+treatment effect exceeds a certain proportion e.</p>
+<p>e is the assumed value of <span class="math inline">\(\theta\)</span>
+under <span class="math inline">\(H_a\)</span> used to simulate or
+compute the probability of detecting an effect. In other words, how
+strong you think the treatment will work before you actually run the
+study. You’re guessing: “If I give this new drug to people, I think
+maybe it’ll help about 60% of them.” you assume <span class="math inline">\(\theta\)</span> = 0.6 when simulating data.</p>
+<p>c is the threshold set for posterior probability. To be more
+specific, it is how sure we want to be (statistically) before we say the
+treatment works. Eg. c = 0.9 means you want to be at least 90% sure the
+treatment is better, or 90% sure that we will reject the null
+hypothesis.</p>
+<p>For example, we want estimate the sample size needed to check if the
+proportion of left-handed people in a population is really 0.1. We
+assume that the true proportion of left-handed people is 20% (e = 0.2).
+We want to be at least 95% sure (c = 0.95) that our sample size is
+sufficient to detect this difference. In this case, the needed sample
+size is 20.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">BESS_unified</span>(<span class="at">theta0 =</span> <span class="fl">0.1</span>, <span class="at">c =</span> <span class="fl">0.95</span>, <span class="at">e =</span> <span class="fl">0.2</span>, <span class="at">type =</span> <span class="st">&quot;one.sample&quot;</span>,</span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>             <span class="at">outcome =</span> <span class="dv">1</span>, <span class="at">a =</span> <span class="dv">1</span>, <span class="at">b =</span> <span class="dv">1</span>, <span class="at">q =</span> <span class="fl">0.5</span>)</span></code></pre></div>
+<pre><code>## $n
+## [1] 25
+## 
+## $n_seq
+##  [1]   5   6   7   8   9  10  11  12  13  14  15  16  17  18  19  20  21  22  23
+## [20]  24  25  26  27  28  29  30  31  32  33  34  35  36  37  38  39  40  41  42
+## [39]  43  44  45  46  47  48  49  50  51  52  53  54  55  56  57  58  59  60  61
+## [58]  62  63  64  65  66  67  68  69  70  71  72  73  74  75  76  77  78  79  80
+## [77]  81  82  83  84  85  86  87  88  89  90  91  92  93  94  95  96  97  98  99
+## [96] 100
+## 
+## $vec
+##  [1] 0.8857350 0.8503056 0.8131047 0.7748410 0.7360989 0.9104381 0.8891300
+##  [8] 0.8661172 0.8416400 0.8159389 0.9315938 0.9173594 0.9018032 0.8850024
+## [15] 0.8670467 0.9478476 0.9378663 0.9268869 0.9149251 0.9020064 0.9601407
+## [22] 0.9529431 0.9449931 0.9362826 0.9268099 0.9694369 0.9641511 0.9582962
+## [29] 0.9518557 0.9448172 0.9764905 0.9725586 0.9681943 0.9633794 0.9580981
+## [36] 0.9818640 0.9789113 0.9756285 0.9719987 0.9680060 0.9859734 0.9837396
+## [43] 0.9812531 0.9784987 0.9754621 0.9891271 0.9874273 0.9855332 0.9834321
+## [50] 0.9811114 0.9915547 0.9902551 0.9888058 0.9871961 0.9854153 0.9934286
+## [57] 0.9924311 0.9913178 0.9900800 0.9887090 0.9948786 0.9941103 0.9932524
+## [64] 0.9922978 0.9912391 0.9960029 0.9954095 0.9947466 0.9940083 0.9931889
+## [71] 0.9968764 0.9964170 0.9959034 0.9953312 0.9946956 0.9975561 0.9971997
+## [78] 0.9968011 0.9963566 0.9958626 0.9980859 0.9978088 0.9974988 0.9971531
+## [85] 0.9967684 0.9984994 0.9982836 0.9980422 0.9977727 0.9974728 0.9988225
+## [92] 0.9986543 0.9984659 0.9982556 0.9980214 0.9990753
+## 
+## $m_vec
+##  [1]  1  1  1  1  1  2  2  2  2  2  3  3  3  3  3  4  4  4  4  4  5  5  5  5  5
+## [26]  6  6  6  6  6  7  7  7  7  7  8  8  8  8  8  9  9  9  9  9 10 10 10 10 10
+## [51] 11 11 11 11 11 12 12 12 12 12 13 13 13 13 13 14 14 14 14 14 15 15 15 15 15
+## [76] 16 16 16 16 16 17 17 17 17 17 18 18 18 18 18 19 19 19 19 19 20</code></pre>
+</div>
+<div id="post_prob_bayes-posterior-probability" class="section level3">
+<h3>Post_Prob_Bayes: Posterior Probability</h3>
+<p>When we know the sample size, we could then use the
+<code>Post_Prob_Bayes</code> function to compute the posterior
+probability that a parameter exceeds a threshold using Bayesian updating
+for one-sample or two-sample scenarios. Supports binary and continuous
+outcomes for both one-arm and two-arm tests.</p>
+<p>The threshold, also referred to as margin, is the value we want to
+compare against, like a benchmark or a minimum effect size. For example,
+in a one-arm trial, it is the null hypothesis value, which is the value
+we want to test against, $^* $.</p>
+<p>Delta is the difference we want to detect between the treatment and
+control groups. In a two-arm trial, if we want to know if a new
+treatment is better than the current one by at least 10%, we set delta
+to 0.1. <span class="math inline">\(\theta_T - \theta_C\)</span> &gt;
+0.1.</p>
+<p>The prior is the initial belief about the parameter before seeing the
+data. It can be a Beta distribution for binary outcomes, a Normal
+distribution for continuous outcomes, or a Gamma distribution for count
+outcomes. The prior reflects our initial knowledge or assumptions about
+the parameter before we collect any data.</p>
+<p>We want to check if the average height of American male population is
+greater than 178 cm. We assume the average height is 180 cm (e = 175)
+with a standard deviation of 4 cm (sig = 4). We want to be at least 95%
+sure (c = 0.95) that our sample size is sufficient to detect this
+difference. In this case, we can use the <code>Post_Prob_Bayes</code>
+function to compute the posterior probability.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="fu">Post_Prob_Bayes</span>(<span class="at">type =</span> <span class="st">&quot;one.sample&quot;</span>, <span class="at">n =</span> <span class="dv">30</span>, <span class="at">theta0 =</span> <span class="dv">178</span>, <span class="at">outcome =</span> <span class="dv">2</span>, <span class="at">e =</span> <span class="dv">175</span>, <span class="at">sig =</span> <span class="dv">4</span>, <span class="at">a =</span> <span class="dv">170</span>, <span class="at">b =</span> <span class="dv">10</span>)</span></code></pre></div>
+<pre><code>## [1] 1.624469e-05</code></pre>
+<p>The probability that the true mean is greater than 178 is about
+0.0016%. It’s extremely unlikely the true mean exceeds 178. We do not
+reject the null hypothesis.</p>
+</div>
+<div id="bess_ssr_design" class="section level3">
+<h3>BESS_SSR_Design</h3>
+<p>Because in real-world trials, uncertainty is high early on, and the
+original guess (the assumed effect size e) might be wrong, we need to
+restimate the sample size. This function performs a Bayesian Estimator
+of Sample Size (BESS) with interim analysis and optional sample size
+re-estimation for a binary, continuous, or count outcomes for both
+one-arm and two-arm clinical trial.</p>
+<p>It starts with an interim analysis at a small sample size n0, then
+Decides whether to stop early for success or futility, or continue to
+the next stage. If continuing, re-estimates the sample size using
+Bayesian Expected Sample Size (BESS) methods based on observed interim
+data. Finally, it makes a decision after simulating the second-stage
+data.</p>
+<p>In a medical trial, we want to start with a small sample size, say 30
+patients, to see if the treatment is working. If it looks promising, we
+can then increase the sample size to get more data and make a better
+decision. In this case, n0 = 30.</p>
+<p>c_s is the posterior probability threshold for early futility. If the
+posterior probability of success is less than or equal to c_s, we stop
+the trial and declare futility. In the other hand, if the posterior
+probability of success is greater than or equal to c, we stop the trial
+and declare success.</p>
+<p>cap is when we want to set a maximum sample size for the trial. If
+cap = TRUE and the re-estimated sample size exceeds n_cap, we stop the
+trial and declare success.</p>
+<p>For example, a hospital wants to evaluate whether a new sanitation
+protocol can reduce the average number of hospital-acquired infections
+(HAIs) in a particular ward. Historically, the ward sees about 5
+infections per month (<span class="math inline">\(\theta_H\)</span> =
+5). The hospital’s goal is to bring this average down to 4 or fewer per
+month (<span class="math inline">\(\theta_s\)</span> = 4). They use a
+Bayesian design to adaptively determine if the protocol is effective
+enough to recommend hospital-wide implementation.</p>
+<p>We observe the number of infections over the first 60 days after
+implementing the new protocol. Then calculate the posterior probability
+that the true average infection rate is <span class="math inline">\(\le4\)</span> using the data from the first 60
+days.</p>
+<p>If this probability is <span class="math inline">\(\ge0.95\)</span>,
+declare success and recommend the protocol. If it is <span class="math inline">\(\le0.1\)</span>, stop for futility. Otherwise,
+continue collecting data (possibly with an adaptively determined sample
+size). Then the design computes how many more days (or months) of
+observation are needed to reach a conclusive decision, using the
+observed data to update the Bayesian posterior.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="fu">BESS_SSR_Design</span>(<span class="at">type =</span> <span class="st">&quot;one.sample&quot;</span>, <span class="at">theta_H =</span> <span class="dv">5</span>,</span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>                <span class="at">theta_s =</span> <span class="dv">4</span>, <span class="at">c =</span> <span class="fl">0.95</span>, <span class="at">c_s =</span> <span class="fl">0.1</span>, <span class="at">n0 =</span> <span class="dv">60</span>,</span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>                <span class="at">outcome =</span> <span class="dv">3</span>)</span></code></pre></div>
+<pre><code>## $y_n0
+##  [1] 4 3 5 3 4 5 3 6 6 9 5 2 9 7 8 4 7 2 5 4 4 4 5 4 4 1 4 5 2 5 7 1 6 3 8 3 8 4
+## [39] 4 5 2 2 6 6 4 5 6 2 6 5 9 6 9 4 6 4 5 6 4 9
+## 
+## $pH1_int
+## [1] 0.9995
+## 
+## $bess_int_dec
+## [1] 1
+## 
+## $y_ns
+## NULL
+## 
+## $e_s
+## [1] NA
+## 
+## $n_s
+## [1] NA
+## 
+## $pH1_s
+## [1] NA
+## 
+## $bess_fin_dec
+## [1] NA</code></pre>
+</div>
+</div>
+<div id="gamma-poisson-model" class="section level1">
+<h1>Gamma-Poisson Model</h1>
+<p>The Gamma-Poisson model is a Bayesian approach for analyzing count
+data, particularly useful in clinical trials where the outcome is a
+count of events (e.g., number of adverse events). This model assumes
+that the counts follow a Poisson distribution with a gamma-distributed
+rate parameter. The posterior probability in this case is the count of
+the treatment group has a higher event rate than count control.</p>
+<div id="count_sample_size" class="section level3">
+<h3>Count_Sample_Size</h3>
+<p>Computes the minimum sample size needed to achieve a posterior
+probability of superiority greater than or equal to a critical
+threshold, under a Gamma-Poisson model for count outcomes.</p>
+<p>Say we want to estimate the sample size needed to check if the
+average number of success shots made by a basketball Player A is greater
+than Player B by at least 1 event. We assume that the average shots/game
+for Player A is 12 and the average shots/game for Player B is 8. We want
+to be at least 90% sure (crit = 0.9) that our sample size is sufficient
+to detect this difference. In this case, we can use the
+<code>Count_Sample_Size</code> function to compute the sample size.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="fu">Count_Sample_Size</span>(<span class="at">type =</span> <span class="st">&quot;two.sample&quot;</span>,</span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a>                  <span class="at">threshold =</span> <span class="dv">1</span>, <span class="co"># We assume A is 1 shot/game better than B</span></span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a>                  <span class="at">crit =</span> <span class="fl">0.9</span>, <span class="at">effect_size =</span> <span class="dv">2</span>, <span class="at">a_t =</span> <span class="fl">0.5</span>, <span class="at">b_t =</span> <span class="fl">0.5</span>, <span class="at">a_c =</span> <span class="fl">0.5</span>, <span class="at">b_c =</span> <span class="fl">0.5</span>, <span class="at">sim =</span> <span class="dv">100</span>)</span></code></pre></div>
+<pre><code>## $n
+## [1] 44
+## 
+## $yd
+## [1] 88
+## 
+## $prob_h1_vec
+##  [1] 0.59 0.61 0.62 0.66 0.65 0.70 0.71 0.73 0.73 0.73 0.74 0.73 0.79 0.81 0.78
+## [16] 0.76 0.82 0.79 0.79 0.82 0.83 0.78 0.81 0.82 0.83 0.83 0.81 0.78 0.81 0.87
+## [31] 0.87 0.82 0.86 0.78 0.85 0.89 0.88 0.88 0.88 0.91
+## 
+## $yd_vec
+##  [1] 10 12 14 16 18 20 22 24 26 28 30 32 34 36 38 40 42 44 46 48 50 52 54 56 58
+## [26] 60 62 64 66 68 70 72 74 76 78 80 82 84 86 88
+## 
+## $y1_vec
+##  [1]  27  44  68  70  70 121 120  99 175 146 160 218 138 144 180 170 148 335 230
+## [20] 412 322 380 495 323 338 385 365 590 470 253 466 697 480 767 432 511 573 612
+## [39] 552 665
+## 
+## $y2_vec
+##  [1]  17  32  54  54  52 101  98  75 149 118 130 186 104 108 142 130 106 291 184
+## [20] 364 272 328 441 267 280 325 303 526 404 185 396 625 406 691 354 431 491 528
+## [39] 466 577</code></pre>
+</div>
+<div id="count_post_prob" class="section level3">
+<h3>Count_Post_Prob</h3>
+<p>Computes the posterior probability that the treatment event rate
+exceeds the control rate by a threshold using Gamma priors and Poisson
+likelihoods.</p>
+<p>FOr example, you are monitoring the rate of hospital-acquired
+infections per 10 patient-days in the ICU unit. Over the past 20
+patient-days, you observed 45 infection events. Historically, an
+infection rate above 2.5 per 10 patient-days is considered unacceptably
+high. You want to compute the posterior probability that the current
+infection rate exceeds 2.5 — using a weak prior (Gamma(0.5, 0.5)) to
+stay conservative.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="fu">Count_Post_Prob</span>(<span class="at">type =</span> <span class="st">&quot;one.sample&quot;</span>, <span class="at">total_count =</span> <span class="dv">45</span>, <span class="at">sample_size =</span> <span class="dv">20</span>,</span>
+<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a>                <span class="at">threshold =</span> <span class="fl">2.5</span>, <span class="at">a_t =</span> <span class="fl">0.5</span>, <span class="at">b_t =</span> <span class="fl">0.5</span>)</span></code></pre></div>
+<pre><code>## [1] 0.1928</code></pre>
+<p>We’re 19.59% sure the true infection rate exceeds 2.5 — it’s not a
+serious problem.</p>
+</div>
+<div id="two_arm_standard_sse_design" class="section level3">
+<h3>Two_Arm_Standard_SSE_Design</h3>
+<p>Simulates a two‑arm clinical trial with binary outcomes.<br />
+The design supports an optional interim look that applies a Bayesian
+error‑spending rule; otherwise, the final decision is based on a
+traditional frequentist z‑test against a non‑inferiority/superiority
+margin.</p>
+<p>This design evaluates whether the treatment group performs
+significantly better than the control group, considering a pre-specified
+superiority margin (theta_s). The function supports early stopping for
+success or futility based on Bayesian posterior probabilities, followed
+by a final frequentist z-test if no early decision is made.</p>
+<p>interim: Logical, if TRUE, perform an interim Bayesian analysis at
+sample size n_0. If posterior <span class="math inline">\(\le\)</span>
+c: Stop early for success. If posterior <span class="math inline">\(\le\)</span> c_s: Stop early for futility.
+Otherwise: Continue to enroll up to n_f, and perform the same
+frequentist z-test as above for final decision-making. If FALSE, perform
+a final analysis at sample size n_f. If the p-value <span class="math inline">\(&lt; \alpha\)</span>, declares success. Otherwise,
+failure.</p>
+<p>An online retailer has developed a new checkout process (H) and wants
+to compare it against their existing process (L). The outcome of
+interest is whether a user completes the purchase (success = 1, failure
+= 0). Since we are conducting a one-sided test, the significance level
+is set to 0.025 (half of the original <span class="math inline">\(\alpha\)</span>). We observe the outcomes of
+interest over the first 50 users after implementing the new checkout
+process. If the new process is clearly superior/inferior, stop early.
+Otherwise, continue to collect data to 100 per group for a final
+decision.</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a><span class="fu">Two_Arm_Standard_SSE_Design</span>(</span>
+<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a>  <span class="at">n_f     =</span> <span class="dv">100</span>,</span>
+<span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a>  <span class="at">theta_H =</span> <span class="fl">0.65</span>,</span>
+<span id="cb12-4"><a href="#cb12-4" tabindex="-1"></a>  <span class="at">theta_L =</span> <span class="fl">0.50</span>,</span>
+<span id="cb12-5"><a href="#cb12-5" tabindex="-1"></a>  <span class="at">theta_s =</span> <span class="fl">0.10</span>,</span>
+<span id="cb12-6"><a href="#cb12-6" tabindex="-1"></a>  <span class="at">alpha   =</span> <span class="fl">0.025</span>,</span>
+<span id="cb12-7"><a href="#cb12-7" tabindex="-1"></a>  <span class="at">interim =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb12-8"><a href="#cb12-8" tabindex="-1"></a>  <span class="at">n_0     =</span> <span class="dv">50</span>)</span></code></pre></div>
+<pre><code>## [1]  0.66  0.56  0.00 50.00</code></pre>
+<p>In this case, the posterior probability of success is 0.74, which is
+less than the threshold of 0.975, so we stop early for futility. The
+decision indicator is 0, and number of subjects use is still 50.</p>
+</div>
+<div id="non-inferiority" class="section level2">
+<h2>Non-Inferiority</h2>
+<div id="two_arm_combined_sample_size" class="section level3">
+<h3>Two_Arm_Combined_Sample_Size</h3>
+<p>Determines the minimum sample size required for the posterior
+probability of a treatment effect to exceed a specified threshold, given
+a prior distribution and assumed effect. Supports binary, continuous,
+and count outcomes.</p>
+<p>prior_mean is the mean of your prior distribution for the treatment
+effect—basically, what you believe the average difference between the
+treatment and control groups is before seeing any data. It is your best
+guess of the treatment effect (or the difference in means) before
+collecting any data. prior_sd is how uncertain you are about that guess.
+A larger SD means more uncertainty.</p>
+<p>If you believe that the treatment improves the outcome by 2 units on
+average, and you’re fairly confident in that guess, you might use:
+prior_mean = 2 prior_sd = 1</p>
+<p>If you’re not sure at all and want to stay neutral, you could use:
+prior_mean = 0 prior_sd = 10</p>
+<p>{crit} is the cutoff value mentioned earlier, which is the threshold
+for the posterior probability of success. It is the value you want to
+compare against, like a benchmark or a minimum effect size. For example,
+if you want to be at least 90% sure that the treatment is better than
+the control, you would set crit = 0.9.</p>
+<p>For example, a company wants to introduce a new productivity software
+and measure if it improves the average number of tasks completed per day
+by employees compared to the current tool. The outcome (number of tasks
+per day) is continuous. To determine the minimum number of employees
+needed in each group (new software vs. current software) to be at least
+90% sure (posterior probability ≥ 0.9) that the new tool improves
+productivity by at least 0.2 tasks per day, assuming the expected
+improvement is 0.4 tasks.</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a><span class="fu">Two_Arm_Combined_Sample_Size</span>(</span>
+<span id="cb14-2"><a href="#cb14-2" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">&quot;continuous&quot;</span>,</span>
+<span id="cb14-3"><a href="#cb14-3" tabindex="-1"></a>  <span class="at">threshold =</span> <span class="fl">0.2</span>,</span>
+<span id="cb14-4"><a href="#cb14-4" tabindex="-1"></a>  <span class="at">crit =</span> <span class="fl">0.9</span>,</span>
+<span id="cb14-5"><a href="#cb14-5" tabindex="-1"></a>  <span class="at">effect_size =</span> <span class="fl">0.4</span>,</span>
+<span id="cb14-6"><a href="#cb14-6" tabindex="-1"></a>  <span class="at">prior_mean =</span> <span class="dv">0</span>,</span>
+<span id="cb14-7"><a href="#cb14-7" tabindex="-1"></a>  <span class="at">prior_sd =</span> <span class="dv">1</span>,</span>
+<span id="cb14-8"><a href="#cb14-8" tabindex="-1"></a>  <span class="at">sigma =</span> <span class="dv">1</span>)</span></code></pre></div>
+<pre><code>## $n
+## [1] 44
+## 
+## $prob
+## [1] 0.9000808
+## 
+## $posterior_prob_margin_exceeded
+##  [1] 0.6280143 0.6472715 0.6643134 0.6796308 0.6935592 0.7063388 0.7181486
+##  [8] 0.7291255 0.7393773 0.7489907 0.7580363 0.7665729 0.7746496 0.7823085
+## [15] 0.7895857 0.7965123 0.8031157 0.8094199 0.8154462 0.8212136 0.8267391
+## [22] 0.8320381 0.8371243 0.8420104 0.8467078 0.8512271 0.8555778 0.8597689
+## [29] 0.8638084 0.8677041 0.8714629 0.8750913 0.8785955 0.8819811 0.8852534
+## [36] 0.8884175 0.8914780 0.8944394 0.8973057 0.9000808 0.9027685 0.9053723
+## [43] 0.9078954 0.9103409 0.9127118 0.9150110 0.9172411 0.9194046 0.9215040
+## [50] 0.9235415 0.9255194 0.9274398 0.9293047 0.9311159 0.9328754 0.9345848
+## [57] 0.9362458 0.9378601 0.9394292 0.9409546 0.9424377 0.9438798 0.9452822
+## [64] 0.9466463 0.9479731 0.9492640 0.9505199 0.9517420 0.9529314 0.9540889
+## [71] 0.9552156 0.9563124 0.9573801 0.9584198 0.9594321 0.9604178 0.9613779
+## [78] 0.9623129 0.9632237 0.9641109 0.9649753 0.9658173 0.9666378 0.9674373
+## [85] 0.9682164 0.9689756 0.9697156 0.9704368 0.9711398 0.9718250 0.9724931
+## [92] 0.9731444 0.9737793 0.9743984 0.9750021 0.9755908</code></pre>
+<p>Computes the posterior probability that the mean of a binary,
+continuous or a count treatment group exceeds a threshold. For binary
+outcome, it assumes Beta prior and Binomial likelihood. For continuous
+outcome, it assums Normal prior and likelihood. For count outcome, it
+assumes Gamma prior and Poisson likelihood.</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a><span class="fu">Two_Arm_Combined_Post_Prob</span>(</span>
+<span id="cb16-2"><a href="#cb16-2" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">&quot;continuous&quot;</span>,</span>
+<span id="cb16-3"><a href="#cb16-3" tabindex="-1"></a>  <span class="at">sample_size =</span> <span class="dv">50</span>,</span>
+<span id="cb16-4"><a href="#cb16-4" tabindex="-1"></a>  <span class="at">threshold =</span> <span class="dv">0</span>,</span>
+<span id="cb16-5"><a href="#cb16-5" tabindex="-1"></a>  <span class="at">effect_size =</span> <span class="fl">0.3</span>,</span>
+<span id="cb16-6"><a href="#cb16-6" tabindex="-1"></a>  <span class="at">prior_mean =</span> <span class="dv">0</span>,</span>
+<span id="cb16-7"><a href="#cb16-7" tabindex="-1"></a>  <span class="at">prior_sd =</span> <span class="dv">1</span>,</span>
+<span id="cb16-8"><a href="#cb16-8" tabindex="-1"></a>  <span class="at">sigma =</span> <span class="dv">1</span>,</span>
+<span id="cb16-9"><a href="#cb16-9" tabindex="-1"></a>  <span class="at">quant =</span> <span class="fl">0.5</span></span>
+<span id="cb16-10"><a href="#cb16-10" tabindex="-1"></a>)</span></code></pre></div>
+<pre><code>## [1] 0.982154</code></pre>
+</div>
+</div>
+<div id="conclusion" class="section level2">
+<h2>Conclusion</h2>
+<p>The SSEBFF package provides a comprehensive set of tools for sample
+size estimation in Bayesian clinical trials. By incorporating prior
+information, estimating sample size, and desired posterior
+probabilities, it allows researchers to design trials that are
+statistically sound and efficient. The functions provided in this
+package can handle various types of outcomes, including binary,
+continuous, and count data, making it versatile for different clinical
+trial designs.</p>
+</div>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
