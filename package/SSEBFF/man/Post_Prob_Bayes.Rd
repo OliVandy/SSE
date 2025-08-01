@@ -58,5 +58,5 @@ A numeric value representing the posterior probability (possibly adjusted by \co
 Post_Prob_Bayes(type = "one.sample", n = 20, theta0 = 0.5, outcome = 1, e = 0.6)
 
 # Two-sample binary
-Post_Prob_Bayes(type = "two.sample", n = 20, delta = 0.1, Y_t = 13, Y_c = 8)
+Post_Prob_Bayes(type = "two.sample", n = 20, delta = 0.1, outcome = 1, Y_t = 13, Y_c = 8)
 }
