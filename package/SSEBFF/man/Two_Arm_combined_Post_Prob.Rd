@@ -66,8 +66,8 @@ In particular, in conjunction with \code{BESS_binary()}, these functions support
 # Binary example
 Two_Arm_Combined_Post_Prob(
   type = "binary",
-  count_treat = 25,
-  count_ctrl = 15,
+  obs_t = 25,
+  obs_c = 15,
   sample_size = 50,
   threshold = 0,
   alpha1 = 0.5,
