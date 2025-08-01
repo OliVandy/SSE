@@ -321,7 +321,7 @@ BESS_SSR_Design = function(type = "two.sample",
         a2_ip <- post_mean_H
         b2_ip <- sig / sqrt(n0)
         e_s <- post_mean_L - post_mean_H
-        ss_result <- Two_Arm_Cont_Sample_Size(theta0 = -theta_s, c = c, e = e_s,
+        ss_result <- Two_Arm_Cont_SS(theta0 = -theta_s, c = c, e = e_s,
                                               a1 = a1_ip, b1 = b1_ip, a2 = a2_ip, b2 = b2_ip, sig = sig, q = q, n_min = n_min, n_max = n_max)
         n_s <- ss_result$n
       } else {
