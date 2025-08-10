@@ -1,7 +1,7 @@
 \encoding{UTF-8}
 \name{BESS_SSR_Design}
 \alias{BESS_SSR_Design}
-\title{Bayesian Error Spending Strategy with Sample Size Re-Estimation for one and two-arm trials}
+\title{Bayesian Estimator of Sample Size with Sample Size Re-Estimation for one and two-arm trials}
 \description{
   Implements an adaptive Bayesian sample size re-estimation (SSR) design for both one-arm and two-arm trials with support for binary, continuous, and count outcomes. This function performs an interim analysis and determines whether the trial should stop early for success or futility, or continue with an updated sample size based on posterior predictive evidence.
 }
