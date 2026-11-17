@@ -1,0 +1,3 @@
+^SSEBFF_[^/]+\.tar\.gz$
+^vignettes/[^/]+\.html$
+^cran-comments\.md$

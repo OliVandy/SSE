@@ -36,15 +36,9 @@ Two_Arm_Count_Post_Prob = function(count_treat, count_ctrl, sample_size, thresho
 
 Two_Arm_Count_Min_Effect = function(effect_size, sample_size, threshold, 
                                     a_t, b_t, a_c, b_c, quant=0.5, s_reps=1e4, reps=1e4) {
-  lambda_ctrl = rgamma(s_reps, a_c, rate = b_c)
-  res = lapply(1:s_reps, function(i) {
-    ctrl = sum(rpois(sample_size, lambda_ctrl[i]))
-    treat = ctrl + floor(sample_size * effect_size)
-    prob = Two_Arm_Count_Post_Prob(treat, ctrl, sample_size, threshold, 
-                                   a_t, b_t, a_c, b_c, quant, reps)
-    list(y1 = treat, y2 = ctrl, prob = prob)
-  })
-  res[[which.min(sapply(res, `[[`, "prob"))]]
+  result = Two_Arm_Gamma_Min_Effect(effect_size, sample_size, threshold,
+                                    a_t, b_t, a_c, b_c, quant, s_reps, reps)
+  list(y1 = result$y1, y2 = result$y2, prob = result$min_xi)
 }
 
 Two_Arm_Combined_Post_Prob = function(type = c("continuous", "count", "binary"),
@@ -167,11 +161,11 @@ Two_Arm_Combined_Sample_Size = function(type = c("binary", "continuous", "count"
   }
 }
 
-#' Compute the (possibly weighted) posterior probability  
-#' that p_t – p_c exceeds the specified margin (M).  
-#' For a superiority test, M > 0 means H1: p_t – p_c > M  
-#' For a non‑inferiority test, you simply pass M < 0,  
-#' so H1: p_t – p_c > M  ⇔  p_t is no more than |M| worse than p_c.
+# Compute the (possibly weighted) posterior probability  
+# that p_t – p_c exceeds the specified margin (M).  
+# For a superiority test, M > 0 means H1: p_t – p_c > M  
+# For a non‑inferiority test, you simply pass M < 0,  
+# so H1: p_t – p_c > M  ⇔  p_t is no more than |M| worse than p_c.
 Two_Arm_Binary_Post_Prob = function(obs_t, obs_c, n, margin,
                                     alpha1 = 0.5, beta1 = 0.5,
                                     alpha2 = 0.5, beta2 = 0.5,
@@ -220,13 +214,13 @@ Two_Arm_Binary_Min_Prob = function(diff, n, margin,
   )
 }
 
-#' BESS two-arm sample‑size finder  
-#' @param margin      if >0 you’re asking for superiority;  
-#'                    if <0 you’re asking for non‑inferiority by |margin|.
-#' @param threshold   posterior probability cut‑off (e.g. 0.8 or 0.9)
-#' @param delta       expected true difference p_t – p_c
-#' @param min_n, max_n search range for total sample per arm
-#' @param …           other prior parameters & iterations
+# BESS two-arm sample‑size finder  
+# @param margin      if >0 you’re asking for superiority;  
+#                    if <0 you’re asking for non‑inferiority by |margin|.
+# @param threshold   posterior probability cut‑off (e.g. 0.8 or 0.9)
+# @param delta       expected true difference p_t – p_c
+# @param min_n, max_n search range for total sample per arm
+# @param …           other prior parameters & iterations
 BESS_binary = function(margin, threshold, delta,
                        min_n, max_n,
                        alpha1 = 0.5, beta1 = 0.5,

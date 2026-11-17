@@ -24,16 +24,21 @@ One_Arm_Post_Prob_Theta = function(n, theta0, e, outcome, a, b, sig = 1){
 
 One_Arm_Post_Prob_H1 = function(n, theta0, e, outcome, a, b, sig = 1, q = 0.5){
   # Check if n is interger
-  if(n < 0){
+  if(length(n) != 1 || !is.numeric(n) || !is.finite(n) || n <= 0 || n != floor(n)){
     return("Please enter an interger that is greater than 0.")
-  }
-  # Check if e is within 0 and 1
-  if(e < 0 || e > 1){
-    return("Please enter an evidence that is between 0 and 1.")
   }
   # Check if outcome is 1, 2, or 3
   if(!(outcome %in% c(1,2,3))){
     return("Please enter a valid outcome type, 1 = binary, 2 = continuous, and 3 = count-data.")
+  }
+  if(length(e) != 1 || !is.numeric(e) || !is.finite(e)){
+    return("Please enter a finite numeric evidence value.")
+  }
+  if(outcome == 1 && (e < 0 || e > 1)){
+    return("Please enter an evidence that is between 0 and 1.")
+  }
+  if(outcome == 3 && e < 0){
+    return("Please enter a non-negative mean count.")
   }
   # Check if q is a probability between 0 and 1
   if(q <= 0 || q >= 1 || !is.double(q)){
@@ -51,7 +56,11 @@ One_Arm_Post_Prob_H1 = function(n, theta0, e, outcome, a, b, sig = 1, q = 0.5){
 }
 
 One_Arm_BESS = function(theta0, c, e, outcome, a, b, q = 0.5, sig = 1, n_min = 5, n_max = 100){
-  if(n_min <= 0 || n_max < n_min || !is.double(n_min) || !is.double(n_max)){
+  if(length(n_min) != 1 || length(n_max) != 1 ||
+     !is.numeric(n_min) || !is.numeric(n_max) ||
+     !is.finite(n_min) || !is.finite(n_max) ||
+     n_min <= 0 || n_max < n_min ||
+     n_min != floor(n_min) || n_max != floor(n_max)){
     return("Please enter valid min and max values.")
   }
   # Check if outcome is 1, 2, or 3
@@ -68,6 +77,7 @@ One_Arm_BESS = function(theta0, c, e, outcome, a, b, q = 0.5, sig = 1, n_min = 5
   for(n in n_seq){
     #print(n)
     s_vec[cnt] = One_Arm_Post_Prob_H1(n, theta0, e, outcome, a, b, sig = sig, q = q)
+    if(is.character(s_vec)) return(s_vec[cnt])
     #print(s_vec)
     if(outcome %in% c(1,3)){
       m_vec[cnt] = floor(n*e)
@@ -77,7 +87,7 @@ One_Arm_BESS = function(theta0, c, e, outcome, a, b, q = 0.5, sig = 1, n_min = 5
   if(s_vec[1] >= c){
     return("Can lower n_min.")
   }
-  if(s_vec[length(s_vec)] < c){
+  if(!any(s_vec >= c)){
     return("Need to increase max sample size!")
   }
   n_result = n_seq[which(s_vec >= c)[1]]

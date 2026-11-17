@@ -2,15 +2,19 @@
 title: "Sample Size Estimation for Clinical Trials in Multiple Paradigms-Frequentist"
 author: "Rachel Zhuang and R. Oliver VandenBerg"
 date: "2025-06-30"
-output: rmarkdown::html_vignette
+output: html
 vignette: >
   %\VignetteIndexEntry{Sample Size Estimation for Clinical Trials in Multiple Paradigms-Frequentist}
-  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEngine{knitr::knitr}
   %\VignetteEncoding{UTF-8}
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, error = FALSE)
+# Embed local assets without downloading web resources during package builds.
+options(litedown.jsd_resolve = FALSE,
+        litedown.html.options = list(embed_resources = "local", js_highlight = FALSE))
+set.seed(42)
 ```
 The SSEBFF package is designed to assist in sample size estimation for clinical trials across various paradigms, including Frequentist and Bayesian. This vignette focuses on the Frequentist paradigm.
 
@@ -30,7 +34,7 @@ We will demonstrate the package function through example simulations. In this pa
 ### Example: Binary Sample Size Estimation for One-Arm and Two-Arm Trials
 Scenario: We want to estimate the sample size needed to detect a difference in proportions between right-handed and left-handed individuals.
 
-$\alpha$ is the significance level, which is the probability of rejecting the null hypothesis when it is true (Type I error). $\beta$ is the power of the test, which is the probability of correctly rejecting the null hypothesis when it is false (1 - Type II error). The higher the power, the more likely we are to detect a true effect if it exists.
+$\alpha$ is the type I error probability. $\beta$ is the type II error probability, so the target power is $1-\beta$. The following calculation uses alpha 0.05 and power 0.8.
 ```{r}
 Freq_Binary_theoretical(alpha = 0.05, beta = 0.2, theta1 = 0.9, theta0 = 0.2)
 # theta1 is the expected proportion of right-handed individuals, and theta0 is the expected proportion of left-handed individuals.
@@ -44,33 +48,30 @@ Scenario: We want to estimate the sample size needed to detect a difference in m
 t_test_sim_sample_size(alpha = 0.05, beta = 0.2, mu1 = 174, mu0 = 163,
                        sigma1 = 6.5, sigma0 = 6,
                        type = "two.sample",
-                       nmin = 10, nmax = 5000, sims = 10000)
+                       nmin = 10, nmax = 50, sims = 500)
 # mu1 is the expected mean height for male, and mu0 is the expected mean height for female. Sigma1 is the standard deviation of collected male height data, and sigma0 is the standard deviation of collected female height data.
 ```
 
 ### Freq_Count_Combined
 This function is designed to estimate the sample size needed for a one-arm or two-arm trial with count data. This function can be used to determine the required sample size based on the expected event rates and the desired power and significance level.
 
-For example, we are comparing shot success between two basketball players. Player A hits 12 shots/game on average, and Player B hits 8 shots/game. We want to know: how many games should you record to be 95% sure that Player A’s scoring rate is really higher than Player B’s — and not just random luck? 
+For example, compare event rates of 12 and 8 per observation period using a one-sided test with type I error target 0.05 and power target 0.9. The simulation uses negative binomial distributions. The arguments sig1 and sig0 are size parameters, with variance mu + mu^2 / sig.
 ```{r}
 Freq_Count_Combined(
   alpha = 0.05,
   beta = 0.1,
   mu1 = 12,    # Player A's shot rate
   mu0 = 8,     # Player B's shot rate
-  sig1 = 2,    # Standard deviation of Player A's shot rate
-  sig0 = 1.5,  # Standard deviation of Player B's shot rate
+  sig1 = 2,    # Negative binomial size for Player A
+  sig0 = 1.5,  # Negative binomial size for Player B
   type = "two.sample",
   nmin = 5,
-  nmax = 300,
+  nmax = 50,
   sims = 100
 )
 ```
 
 ## Conclusion
-The SSEBFF package provides a comprehensive set of tools for sample size estimation in frequentist clinical trials. By using the functions provided, researchers can easily calculate the required sample sizes and posterior probability for both one-arm and two-arm trials, ensuring that their studies are adequately powered to detect meaningful effects.
+These examples illustrate approximate and simulated frequentist sample size calculations. The simulation result is the first searched size whose estimated errors meet the specified targets. It can be NA when the search range is insufficient. Larger simulation budgets reduce Monte Carlo uncertainty.
 
-\section*{References}
-\begin{itemize}
-\item 
-\end{itemize}
+

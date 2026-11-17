@@ -12,7 +12,7 @@ Freq_Binary_theoretical = function(alpha, beta, theta1, theta0, type= "two.sampl
     n = ceiling(numerator / denominator)  # Round up to nearest whole number
   }
   if(!(type %in% c("two.sample","one.sample"))){
-    warning("Wrong value, please choose from one.sample or two.sample")
+    stop("Wrong value, please choose from one.sample or two.sample")
   }
   return(n)
 }

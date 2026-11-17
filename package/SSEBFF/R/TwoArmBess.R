@@ -286,7 +286,7 @@ Two_Arm_Bayes_Sample_Size = function(null_margin, threshold, expected_effect, mi
 
 Two_Arm_Cont_SS = function(theta0, c, e, a1, b1, a2, b2,
                                     sig = 1, q = 0.5, n_min = 5, n_max = 100) {
-  if(n_min <= 0 || n_max < n_min || !is.double(n_min) || !is.double(n_max)){
+  if(n_min <= 0 || n_max < n_min || n_min != floor(n_min) || n_max != floor(n_max)){
     stop("Please enter valid min and max values.")
   }
   
@@ -295,12 +295,11 @@ Two_Arm_Cont_SS = function(theta0, c, e, a1, b1, a2, b2,
   
   cnt = 1
   for(n in n_seq){
-    # simulate posterior samples under Normal assumption
-    mu1_samples = rnorm(10000, mean = a1, sd = sig / sqrt(n))
-    mu2_samples = rnorm(10000, mean = a2, sd = sig / sqrt(n))
-    
-    delta_samples = mu2_samples - mu1_samples  # treatment - control
-    s_vec[cnt] = mean(delta_samples > theta0)
+    s_vec[cnt] = Post_Prob_Bayes(type = "two.sample", n = n,
+                                 delta = theta0, outcome = 2,
+                                 Y_t = a1 + e, Y_c = a1, sig = sig,
+                                 a1 = a1, b1 = b1, a2 = a2, b2 = b2,
+                                 q = q)
     
     cnt = cnt + 1
   }
@@ -308,7 +307,7 @@ Two_Arm_Cont_SS = function(theta0, c, e, a1, b1, a2, b2,
   if (s_vec[1] >= c) {
     return("Can lower n_min.")
   }
-  if (s_vec[length(s_vec)] < c) {
+  if (!any(s_vec >= c)) {
     return("Need to increase max sample size!")
   }
   
@@ -339,14 +338,20 @@ Two_Arm_Gamma_Post_Prob = function(count_treat, count_ctrl, sample_size, thresho
 }
 
 Two_Arm_Gamma_Min_Effect = function(effect_size, sample_size, threshold, a_t, b_t, a_c, b_c, quant = 0.5, s_reps = 10000, reps = 10000) {
-  lambda_ctrl = rgamma(s_reps, a_c, rate = b_c)
+  count_diff = floor(sample_size * effect_size)
+  if (count_diff >= 0) {
+    baseline_rates = rgamma(s_reps, a_c, rate = b_c)
+  } else {
+    baseline_rates = rgamma(s_reps, a_t, rate = b_t)
+  }
   probs = rep(NA, s_reps)
   yt_vals = rep(NA, s_reps)
   yc_vals = rep(NA, s_reps)
   
   for (i in 1:s_reps) {
-    ctrl_count = sum(rpois(sample_size, lambda_ctrl[i]))
-    treat_count = ctrl_count + floor(sample_size * effect_size)
+    baseline_count = sum(rpois(sample_size, baseline_rates[i]))
+    ctrl_count = baseline_count - min(count_diff, 0)
+    treat_count = baseline_count + max(count_diff, 0)
     probs[i] = Two_Arm_Gamma_Post_Prob(treat_count, ctrl_count, sample_size, threshold, a_t, b_t, a_c, b_c, quant, reps)
     yt_vals[i] = treat_count
     yc_vals[i] = ctrl_count

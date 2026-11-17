@@ -1,14 +1,29 @@
 Package: SSEBFF
-Version: 0.01
-Date: 2025-05-27
+Version: 0.1.0
 Title: Sample Size Estimation for Clinical Trials in Multiple Paradigms
-Author: Rachel Zhuang <rachel-zhuang1@hotmail.com>, R. Oliver VandenBerg <vandenbergroliver@gmail.com>
-Maintainer: R. Oliver VandenBerg <vandenbergroliver@gmail.com>
-Depends: R (>= 3.5.0)
-Description: Includes Sample size estimations for one and term arm trials in standard, non-inferiority, and longitudinal cases, under both Bayesian and Frequentist paradigms. Some fiducial sample size estimation may be included later.
+Authors@R: c(
+    person("Rachel", "Zhuang", email = "rachel-zhuang1@hotmail.com",
+           role = c("aut", "cre")),
+    person("R. Oliver", "VandenBerg", email = "vandenbergroliver@gmail.com",
+           role = "aut"))
+Depends: R (>= 3.6.0)
+Description: Estimates sample sizes for one-arm and two-arm trials with
+    binary, continuous, and count outcomes. Provides normal-approximation and
+    simulation-based frequentist calculations, conjugate Bayesian posterior
+    probabilities, posterior-probability sample size searches, and simulated
+    interim decisions with sample size re-estimation. Bayesian calculations
+    use beta-binomial, normal-normal, and gamma-Poisson models and include
+    superiority and non-inferiority margins. The Bayesian sample size
+    framework is described by Bi and Ji (2024)
+    <doi:10.48550/arXiv.2404.07923>.
 License: CC0
+Encoding: UTF-8
+Imports:
+    stats,
+    utils
 Suggests:
-	rmarkdown,
-	knitr,
+    markdown (>= 2.1),
+    knitr (>= 1.52)
 VignetteBuilder: knitr
-Config/testthat/edition: 3
+Config/roxygen2/version: 8.1.1
+Language: en-US
